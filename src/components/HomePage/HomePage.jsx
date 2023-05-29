@@ -13,18 +13,23 @@ export default function HomePage() {
     <main className="h-screen w-full flex p-4 bg-amber-50 dark:bg-slate-950">
       <section className="flex flex-col justify-between">
         {" "}
-        <h1 className="h-[16%] heading font-black text-center text-8xl text-slate-950 tracking-wider dark:text-white">
+        {/* heading class is for the entrance animation of the heading */}
+        <h1 className="heading h-[16%] font-black text-center text-8xl text-slate-950 tracking-wider dark:text-white">
           fast-typer
         </h1>
         <img
           src={typewriter}
           alt="The Typewriter floating image"
-          className="h-[74%] "
+          className="h-[74%]"
         />
         <footer className="h-[10%] flex justify-around">
           <ThemeSelector />
           <FooterLogo />
         </footer>
+      </section>
+      <section className="border-2 border-black flex-auto p-4">
+        <h1>Login</h1>
+        <form action=""></form>
       </section>
     </main>
   );
