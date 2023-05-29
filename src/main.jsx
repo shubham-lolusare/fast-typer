@@ -1,10 +1,9 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import App from "./App.jsx";
-import Page1 from "./page1.jsx";
-import Page2 from "./page2.jsx";
-import Error from "./error.jsx";
 import "./index.css";
+import { ThemeProvider } from "./contexts/Theme";
+
+// importing react-router methods
 import {
   createHashRouter,
   RouterProvider,
@@ -12,17 +11,27 @@ import {
   createRoutesFromElements,
 } from "react-router-dom";
 
+// importing components for the Router
+import App from "./App.jsx";
+import ErrorPage from "./components/ErrorPage/ErrorPage.jsx";
+import HomePage from "./components/HomePage/HomePage.jsx";
+
 const router = createHashRouter(
   createRoutesFromElements(
-    <Route path="/" element={<App />} errorElement={<Error />}>
-      <Route index element={<Page1 />} />
-      <Route path="page2" element={<Page2 />} />
+    <Route path="/" element={<App />} errorElement={<ErrorPage />}>
+      <Route index element={<HomePage />} />
     </Route>
   )
 );
 
+// configuring the dark store
+if (localStorage.getItem("theme") === "dark")
+  document.documentElement.classList.add("dark");
+
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
-    <RouterProvider router={router} />
+    <ThemeProvider>
+      <RouterProvider router={router} />
+    </ThemeProvider>
   </React.StrictMode>
 );
