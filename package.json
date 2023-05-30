@@ -16,6 +16,7 @@
     "postcss": "^8.4.23",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-icons": "^4.9.0",
     "react-router-dom": "^6.11.2",
     "tailwindcss": "^3.3.2"
   },
@@ -27,6 +28,7 @@
     "eslint-plugin-react": "^7.32.2",
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-react-refresh": "^0.3.4",
+    "tw-colors": "^1.2.6",
     "vite": "^4.3.2"
   }
 }

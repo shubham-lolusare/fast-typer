@@ -1,5 +1,4 @@
-import darkLogo from "./github-mark-white.png";
-import lightLogo from "./github-mark.png";
+import { FaGithubSquare } from "react-icons/fa";
 
 // Importing the context related methods for dark mode
 import { ThemeContext } from "../../contexts/Theme";
@@ -10,7 +9,7 @@ export default function FooterLogo() {
   let { theme } = useContext(ThemeContext);
 
   return (
-    <div className="w-12 h-12 hover:scale-200">
+    <div className="text-5xl">
       <a
         href="https://github.com/shubham-lolusare/fast-typer"
         target="_blank"
@@ -18,9 +17,9 @@ export default function FooterLogo() {
         title="Github Repo"
       >
         {theme === null || theme === "light" ? (
-          <img src={lightLogo} alt="Light Github Logo" />
+          <FaGithubSquare />
         ) : (
-          <img src={darkLogo} alt="Dark Github Logo" />
+          <FaGithubSquare className=" text-white" />
         )}
       </a>
     </div>
