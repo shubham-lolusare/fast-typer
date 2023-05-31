@@ -8,8 +8,8 @@ export default function LoginSignup() {
   let [userChoice, setUserChoice] = useState("login");
 
   let generalTabStyle =
-    "p-2 w-full font-bold text-slate-950 dark:text-white hover:text-xl tracking-widest";
-  let selectedTabStyle = "border-b-4 border-[#ffc100] text-xl shadow";
+    "p-2 w-full font-bold text-textColor hover:text-xl tracking-widest";
+  let selectedTabStyle = "border-b-4 border-thematicColor text-xl shadow";
   let loginStyle = `${
     userChoice === "login"
       ? generalTabStyle + " " + selectedTabStyle
@@ -22,7 +22,7 @@ export default function LoginSignup() {
   }`;
 
   return (
-    <article className="shadow-lg rounded-2xl">
+    <article className="shadow-lg rounded-2xl ">
       <div className="flex justify-evenly">
         <button className={loginStyle} onClick={() => setUserChoice("login")}>
           LOGIN
