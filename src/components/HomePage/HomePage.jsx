@@ -5,10 +5,26 @@ import typewriter from "./type_animate.svg";
 import ThemeSelector from "../ThemeSelector/ThemeSelector";
 import LoginSignup from "../LoginSignup/LoginSignup";
 import { FaGithubSquare } from "react-icons/fa";
+import { useEffect } from "react";
+import { onAuthStateChanged } from "firebase/auth";
+import { auth } from "../../config/firebaseConfig";
+import { useNavigate } from "react-router-dom";
 
 export default function HomePage() {
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        if (user.emailVerified) {
+          navigate("/test");
+        }
+      }
+    });
+  });
+
   return (
-    <main className="h-screen w-full p-4 flex gap-4 bg-bgColor">
+    <main className="h-screen w-full p-2 flex gap-4 bg-bgColor">
       <section className="flex flex-col justify-between">
         {" "}
         {/* heading class is for the entrance animation of the heading */}
@@ -37,7 +53,7 @@ export default function HomePage() {
           </div>
         </footer>
       </section>
-      <section className="flex-auto p-4 flex flex-col justify-between">
+      <section className="flex-auto p-2 flex flex-col justify-between">
         <LoginSignup />
         <p className="text-7xl font-extrabold justify-between">
           <span className="text-textColor">Just Login,</span>

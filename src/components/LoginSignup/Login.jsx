@@ -1,22 +1,67 @@
-import { Input, initTE, Ripple } from "tw-elements";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { AiOutlineEyeInvisible, AiOutlineEye } from "react-icons/ai";
-
+import Loading from "../LoadingPage/LoadingPage";
 import { FcGoogle } from "react-icons/fc";
+import { auth } from "../../config/firebaseConfig";
+import {
+  GoogleAuthProvider,
+  signInWithPopup,
+  signInWithEmailAndPassword,
+} from "firebase/auth";
+import { useNavigate } from "react-router-dom";
+import ForgetPasswordModal from "../ForgetPasswordModal/ForgetPasswordModal";
+import "react-toastify/dist/ReactToastify.css";
 
 export default function Login() {
   let [passwordState, setPasswordState] = useState("hide");
+  let [loading, setLoading] = useState(false);
+  let [showModal, setShowModal] = useState(false);
+  let [status, setStatus] = useState("");
+  let [email, setEmail] = useState("");
+  let [password, setPassword] = useState("");
 
-  useEffect(() => {
-    initTE({ Input, Ripple });
-  }, []);
+  const navigate = useNavigate();
+  const googleProvider = new GoogleAuthProvider();
+
+  function handleGoogleSignin() {
+    setLoading(true);
+
+    signInWithPopup(auth, googleProvider)
+      .then(() => {
+        setLoading(false);
+        navigate("/test");
+      })
+      .catch((error) => {
+        setLoading(false);
+        setStatus(error.message);
+      });
+  }
+
+  function handleLogin(e) {
+    e.preventDefault();
+    setLoading(true);
+
+    signInWithEmailAndPassword(auth, email, password)
+      .then((userCredential) => {
+        setLoading(false);
+        if (userCredential.user.emailVerified) {
+          navigate("/test");
+        } else {
+          setStatus(
+            "Your Email ID is not verified yet. Please verify your Email ID using the verification link sent"
+          );
+        }
+      })
+      .catch((error) => {
+        setLoading(false);
+        setStatus(error.message);
+      });
+  }
 
   return (
     <div className="p-4 flex flex-col gap-4">
-      <form className="flex flex-col gap-2">
-        <h1 className="text-2xl mb-4 text-textColor">
-          Login into your Account
-        </h1>
+      <form className="flex flex-col" onSubmit={handleLogin}>
+        <h1 className="text-xl mb-4 text-textColor">Login into your Account</h1>
         <div className="relative mb-3">
           <input
             type="email"
@@ -24,6 +69,9 @@ export default function Login() {
             id="emailID"
             placeholder="Email Address"
             required
+            onChange={(e) => {
+              setEmail(e.target.value);
+            }}
           />
           <label
             htmlFor="emailID"
@@ -57,6 +105,9 @@ export default function Login() {
             id="password"
             placeholder="Password"
             required
+            onChange={(e) => {
+              setPassword(e.target.value);
+            }}
           />
           <label
             htmlFor="password"
@@ -66,17 +117,22 @@ export default function Login() {
           </label>
         </div>
 
-        <p className="mb-4 text-textColor text-sm font-bold underline underline-offset-2 cursor-pointer hover:text-[15px] transition-all duration-75 ease-linear">
+        <div className=" text-textColor font-bold mb-4">
+          {status !== "" ? status : ""}
+        </div>
+
+        <p
+          onClick={() => setShowModal(!showModal)}
+          className="mb-4 text-textColor text-sm font-bold underline underline-offset-2 cursor-pointer hover:text-[15px] transition-all duration-75 ease-linear"
+        >
           Forgot Password?
         </p>
 
-        <button
-          data-te-ripple-init
-          data-te-ripple-color="light"
+        <input
+          type="submit"
+          value="Login"
           className="w-[50%] p-2 pl-5 pr-5 font-bold shadow-md text-textColor bg-thematicColor/80 rounded-lg tracking-wider hover:bg-thematicColor/100 "
-        >
-          LOGIN
-        </button>
+        />
       </form>
 
       <div className="w-[50%] text-center text-xs font-bold text-textColor">
@@ -85,9 +141,8 @@ export default function Login() {
 
       <div>
         <button
-          data-te-ripple-init
-          data-te-ripple-color="light"
           className="w-[50%] p-2 pl-5 pr-5 border-2 border-thematicColor font-bold shadow-md text-textColor bg-transparent rounded-lg tracking-wider"
+          onClick={handleGoogleSignin}
         >
           <FcGoogle className="inline-block text-xl align-text-bottom mr-2" />
           Continue with Google
@@ -97,6 +152,10 @@ export default function Login() {
         <strong>Note:</strong> If you do not have your account with us, Click on{" "}
         <b>SIGNUP</b>
       </p>
+      {loading && <Loading />}
+      {showModal && (
+        <ForgetPasswordModal show={showModal} setShowModal={setShowModal} />
+      )}
     </div>
   );
 }

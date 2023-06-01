@@ -1,20 +1,88 @@
-import { Input, initTE, Ripple } from "tw-elements";
-import { useEffect, useState } from "react";
+/* eslint-disable react/prop-types */
+import { useState } from "react";
 import { AiOutlineEyeInvisible, AiOutlineEye } from "react-icons/ai";
+import { auth } from "../../config/firebaseConfig";
 
+import {
+  createUserWithEmailAndPassword,
+  GoogleAuthProvider,
+  signInWithPopup,
+  sendEmailVerification,
+} from "firebase/auth";
+import Loading from "../LoadingPage/LoadingPage";
+import { useNavigate } from "react-router-dom";
 import { FcGoogle } from "react-icons/fc";
+
+import { ToastContainer, toast } from "react-toastify";
 
 export default function Signup() {
   let [passwordState, setPasswordState] = useState("hide");
+  let [email, setEmail] = useState("");
+  let [password, setPassword] = useState("");
+  let [confPassword, setConfPassword] = useState("");
+  let [status, setStatus] = useState("");
+  let [loading, setLoading] = useState(false);
+  let navigate = useNavigate();
 
-  useEffect(() => {
-    initTE({ Input, Ripple });
-  }, []);
+  const googleProvider = new GoogleAuthProvider();
+
+  function handleGoogleSignup() {
+    setLoading(true);
+
+    signInWithPopup(auth, googleProvider)
+      .then(() => {
+        setLoading(false);
+        navigate("/test");
+      })
+      .catch((error) => {
+        setLoading(false);
+        setStatus(error.message);
+      });
+  }
+
+  function handleSignup(e) {
+    e.preventDefault();
+    setLoading(true);
+
+    if (password === confPassword) {
+      createUserWithEmailAndPassword(auth, email, password)
+        .then(() => {
+          sendEmailVerification(auth.currentUser)
+            .then(() => {
+              setLoading(false);
+              toast.success(
+                "Please verify the Email ID you have entered using the verification link sent!",
+                {
+                  position: "top-right",
+                  autoClose: 10000,
+                  hideProgressBar: false,
+                  closeOnClick: true,
+                  pauseOnHover: true,
+                  draggable: true,
+                  progress: undefined,
+                  theme: "colored",
+                }
+              );
+              setStatus("");
+            })
+            .catch((error) => {
+              setStatus(error.message);
+            });
+        })
+        .catch((error) => {
+          setLoading(false);
+          setStatus(error.message);
+        });
+    } else {
+      setLoading(false);
+      setStatus("Two passwords do not match");
+    }
+  }
 
   return (
     <div className="p-4 flex flex-col gap-4">
-      <form className="flex flex-col gap-2">
-        <h1 className="text-2xl mb-4 text-textColor">Register with us</h1>
+      <form className="flex flex-col text-textColor" onSubmit={handleSignup}>
+        <h1 className="text-xl mb-4 text-textColor">Register with us</h1>
         <div className="relative mb-3">
           <input
             type="email"
@@ -22,6 +90,9 @@ export default function Signup() {
             id="emailID"
             placeholder="Email Address"
             required
+            onChange={(e) => {
+              setEmail(e.target.value);
+            }}
           />
           <label
             htmlFor="emailID"
@@ -38,6 +109,9 @@ export default function Signup() {
             id="password"
             placeholder="Password"
             required
+            onChange={(e) => {
+              setPassword(e.target.value);
+            }}
           />
           <label
             htmlFor="password"
@@ -71,6 +145,9 @@ export default function Signup() {
             id="confPassword"
             placeholder="Confirm Password"
             required
+            onChange={(e) => {
+              setConfPassword(e.target.value);
+            }}
           />
           <label
             htmlFor="confPassword"
@@ -80,33 +157,36 @@ export default function Signup() {
           </label>
         </div>
 
-        <button
-          data-te-ripple-init
-          data-te-ripple-color="light"
-          className="w-[50%] p-2 pl-5 pr-5 font-bold shadow-md text-textColor bg-thematicColor/80 rounded-lg tracking-wider hover:bg-thematicColor/100 "
-        >
-          Register
-        </button>
-      </form>
+        <div className=" text-textColor font-bold mb-4">
+          {status !== "" ? status : ""}
+        </div>
 
+        <input
+          type="submit"
+          value="Register"
+          className="w-[50%] p-2 pl-5 pr-5 font-bold shadow-md text-textColor bg-thematicColor/80 rounded-lg tracking-wider hover:bg-thematicColor/100 "
+        />
+      </form>
       <div className="w-[50%] text-center text-xs font-bold text-textColor">
         OR
       </div>
 
       <div>
         <button
-          data-te-ripple-init
-          data-te-ripple-color="light"
           className="w-[50%] p-2 pl-5 pr-5 border-2 border-thematicColor font-bold shadow-md text-textColor bg-transparent rounded-lg tracking-wider"
+          onClick={handleGoogleSignup}
         >
           <FcGoogle className="inline-block text-xl align-text-bottom mr-2" />
           Continue with Google
         </button>
       </div>
+      <ToastContainer />
       <p className="text-textColor text-sm">
         <strong>Note:</strong> If you already have your account with us, Click
         on <b>LOGIN</b>
       </p>
+
+      {loading && <Loading />}
     </div>
   );
 }

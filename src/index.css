@@ -1,3 +1,15 @@
 @tailwind base;
 @tailwind components;
+
 @tailwind utilities;
+
+/* formatting the autofill state of inputs */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+select:-webkit-autofill,
+select:-webkit-autofill:hover,
+select:-webkit-autofill:focus {
+  -webkit-text-fill-color: #ff4500;
+  transition: background-color 5000s ease-in-out 0s;
+}
