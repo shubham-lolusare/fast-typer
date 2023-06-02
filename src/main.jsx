@@ -18,12 +18,16 @@ import App from "./App.jsx";
 import ErrorPage from "./components/ErrorPage/ErrorPage.jsx";
 import HomePage from "./components/HomePage/HomePage.jsx";
 import TypingTestPage from "./components/TypingTestPage/TypingTestPage";
+import Profile from "./components/Profile/Profile";
+import Compare from "./components/Compare/Compare";
 
 const router = createHashRouter(
   createRoutesFromElements(
     <Route path="/" element={<App />} errorElement={<ErrorPage />}>
       <Route index element={<HomePage />} />
       <Route path="test" element={<TypingTestPage />} />
+      <Route path="profile" element={<Profile />} />
+      <Route path="compare" element={<Compare />} />
     </Route>
   )
 );

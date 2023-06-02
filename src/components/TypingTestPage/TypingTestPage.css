@@ -1,0 +1,32 @@
+.textbox {
+  -ms-overflow-style: none;
+  scrollbar-width: 0px;
+}
+
+.textbox::-webkit-scrollbar {
+  display: none;
+}
+
+.current {
+  @apply border-l-[3px];
+  @apply border-thematicColor;
+  animation: blink 0.75s ease infinite;
+}
+
+@keyframes blink {
+  from,
+  to {
+    border-color: transparent;
+  }
+  50% {
+    @apply border-thematicColor;
+  }
+}
+
+.correct {
+  color: green;
+}
+
+.incorrect {
+  color: red;
+}

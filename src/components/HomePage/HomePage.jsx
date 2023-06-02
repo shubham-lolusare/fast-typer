@@ -41,7 +41,7 @@ export default function HomePage() {
         />
         <footer className="flex justify-between">
           <ThemeSelector />
-          <div className="text-5xl">
+          <div className="text-4xl">
             <a
               href="https://github.com/shubham-lolusare/fast-typer"
               target="_blank"
@@ -53,7 +53,7 @@ export default function HomePage() {
           </div>
         </footer>
       </section>
-      <section className="flex-auto p-2 flex flex-col justify-between">
+      <section className="flex-auto p-2 pb-0 flex flex-col justify-between">
         <LoginSignup />
         <p className="text-7xl font-extrabold justify-between">
           <span className="text-textColor">Just Login,</span>
