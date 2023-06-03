@@ -1,9 +1,9 @@
 /* eslint-disable react/prop-types */
-import Key from "../Key/Key";
+import Key from "./Key";
 
 export default function Keyboard({ keypress }) {
   return (
-    <div className="w-max border-[1px] border-thematicColor p-4 rounded-2xl shadow-lg flex flex-col gap-2 justify-evenly items-center">
+    <div className="w-ma8border-[1px] border-thematicColor p-4 rounded-2xl shadow-lg flex flex-col gap-2 justify-evenly items-center">
       <div className="flex gap-4">
         <Key value="Q" key="81" keycode="81" keypress={keypress} />
         <Key value="W" key="87" keycode="87" keypress={keypress} />
@@ -54,14 +54,14 @@ export default function Keyboard({ keypress }) {
         )}
         {keypress == 8 ? (
           <div
-            id="32"
+            id="8"
             className="border-[1px] border-thematicColor rounded-lg w-[60%] h-[50px] flex flex-[0.3] justify-center items-center bg-thematicColor text-textColor"
           >
             BACKSPACE
           </div>
         ) : (
           <div
-            id="32"
+            id="8"
             className="border-[1px] border-thematicColor bg-transparent rounded-lg w-[60%] h-[50px] flex flex-[0.3] justify-center items-center"
           >
             BACKSPACE

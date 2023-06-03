@@ -7,7 +7,7 @@
   display: none;
 }
 
-.current {
+.currentCursor {
   @apply border-l-[3px];
   @apply border-thematicColor;
   animation: blink 0.75s ease infinite;
@@ -23,10 +23,8 @@
   }
 }
 
-.correct {
-  color: green;
-}
-
-.incorrect {
-  color: red;
+.currentCursorRight {
+  @apply border-r-[3px];
+  @apply border-thematicColor;
+  animation: blink 0.75s ease infinite;
 }
