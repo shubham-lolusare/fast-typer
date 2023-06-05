@@ -6,6 +6,10 @@ import { createRef, useEffect, useMemo, useRef, useState } from "react";
 import TypingResultModal from "./TypingResultModal";
 import LoadingPage from "../LoadingPage/LoadingPage";
 import "react-toastify/dist/ReactToastify.css";
+import { collection, doc, setDoc, addDoc } from "firebase/firestore";
+import { auth } from "../../config/firebaseConfig";
+import { db } from "../../config/firebaseConfig";
+import { Navigate, useNavigate } from "react-router-dom";
 
 export default function TypingTestPage() {
   let [words, setWords] = useState(randomWords({ min: 300, max: 1000 }));
@@ -20,6 +24,7 @@ export default function TypingTestPage() {
   let [testState, setTestState] = useState("");
   let [loading, setLoading] = useState(false);
   let [count, setCount] = useState(60);
+  let navigate = useNavigate();
 
   let wordRefArr = useMemo(() => {
     return Array(words.length)
@@ -217,13 +222,22 @@ export default function TypingTestPage() {
     setCount(60);
   }
 
+  addDoc(collection(db, "/cities/shubham"), {
+    name: "shuham",
+    country: "Japan",
+  });
+
   if (testState === "end") {
     setLoading(true);
     setTestState("result");
-    setTimeout(() => {
+
+    addDoc(collection(db, "/cities/shubham"), {
+      name: "shuham",
+      country: "Japan",
+    }).then(() => {
       setLoading(false);
       setShowResultModal(true);
-    }, 3000);
+    });
   }
 
   if (count == 0) {
