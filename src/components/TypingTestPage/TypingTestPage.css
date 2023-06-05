@@ -1,9 +1,9 @@
-.textbox {
+#textbox {
   -ms-overflow-style: none;
-  scrollbar-width: 0px;
+  scrollbar-width: none;
 }
 
-.textbox::-webkit-scrollbar {
+#textbox::-webkit-scrollbar {
   display: none;
 }
 
@@ -27,4 +27,34 @@
   @apply border-r-[3px];
   @apply border-thematicColor;
   animation: blink 0.75s ease infinite;
+}
+
+progress[value]::-webkit-progress-value {
+  background-image: -webkit-linear-gradient(
+      -45deg,
+      transparent 33%,
+      rgba(0, 0, 0, 0.1) 33%,
+      rgba(0, 0, 0, 0.1) 66%,
+      transparent 66%
+    ),
+    -webkit-linear-gradient(top, rgba(255, 255, 255, 0.25), rgba(0, 0, 0, 0.25)),
+    -webkit-linear-gradient(left, #09c, #f44);
+  transition: width 0.5s ease;
+}
+
+progress[value]::-moz-progress-bar {
+  background-image: -webkit-linear-gradient(
+      -45deg,
+      transparent 33%,
+      rgba(0, 0, 0, 0.1) 33%,
+      rgba(0, 0, 0, 0.1) 66%,
+      transparent 66%
+    ),
+    -webkit-linear-gradient(top, rgba(255, 255, 255, 0.25), rgba(0, 0, 0, 0.25)),
+    -webkit-linear-gradient(left, #09c, #f44);
+  transition: width 0.5s ease;
+}
+
+#timer:hover > *[contenteditable="true"] {
+  background-color: rgba(217, 245, 255, 0.5);
 }
