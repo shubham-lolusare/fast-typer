@@ -28,7 +28,7 @@ export default function TypingResultModal({
     <div className="h-screen w-full absolute top-0 left-0 bg-black/90 flex justify-center items-center">
       <div className="bg-bgColor relative w-[40%] h-[55%] rounded-xl p-4 text-textColor flex flex-col gap-4 justify-between">
         <RxCross1
-          className="absolute right-6 top-8 hover:text-thematicColor"
+          className="absolute right-6 top-8 hover:text-thematicColor cursor-pointer"
           onClick={handleReset}
         />
         <div className="h-full flex flex-col gap-4">

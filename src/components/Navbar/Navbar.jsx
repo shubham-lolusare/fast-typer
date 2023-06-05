@@ -6,6 +6,7 @@ import { onAuthStateChanged, signOut } from "firebase/auth";
 import { auth } from "../../config/firebaseConfig";
 import { useNavigate } from "react-router-dom";
 import { AiOutlineLogout } from "react-icons/ai";
+import { IoMdAnalytics } from "react-icons/io";
 
 export default function Navbar() {
   let navigate = useNavigate();
@@ -45,6 +46,21 @@ export default function Navbar() {
           }}
         >
           <VscGitCompare className="text-2xl" /> Compare
+        </div>
+        <div className="inline-block h-[50px] min-h-[1em] w-0.5 self-stretch bg-thematicColor opacity-100 "></div>
+        <div
+          className="flex gap-2 justify-between items-center cursor-pointer"
+          onClick={() => {
+            onAuthStateChanged(auth, (user) => {
+              if (user) {
+                navigate("/analysis");
+              } else {
+                navigate("/");
+              }
+            });
+          }}
+        >
+          <IoMdAnalytics className="text-2xl" /> Analysis
         </div>
         <div className="inline-block h-[50px] min-h-[1em] w-0.5 self-stretch bg-thematicColor opacity-100 "></div>
         <div

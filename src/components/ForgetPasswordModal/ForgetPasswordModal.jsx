@@ -44,7 +44,7 @@ export default function ForgetPasswordModal({ show, setShowModal }) {
       <ToastContainer />
       <div className="bg-bgColor relative w-[40%] h-[55%] rounded-xl p-4 text-textColor flex flex-col gap-4 justify-between">
         <RxCross1
-          className="absolute right-4 top-6 text-textColor hover:text-thematicColor"
+          className="absolute right-4 top-6 text-textColor hover:text-thematicColor cursor-pointer"
           onClick={() => setShowModal(!show)}
         />
         <div className="flex flex-col gap-4">
