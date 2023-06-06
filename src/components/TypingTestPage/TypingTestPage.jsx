@@ -233,9 +233,6 @@ export default function TypingTestPage() {
   }
 
   if (testState === "end") {
-    setLoading(true);
-    setTestState("result");
-
     addDoc(collection(db, uid), {
       wpm: correctWordCount,
       cpm: correctCharCount,
@@ -244,10 +241,15 @@ export default function TypingTestPage() {
           ? Math.round((correctWordCount / wordIndex) * 100)
           : 0
       }`,
-    }).then(() => {
-      setLoading(false);
-      setShowResultModal(true);
-    });
+    })
+      .then(() => {
+        setLoading(true);
+        setTestState("result");
+      })
+      .then(() => {
+        setLoading(false);
+        setShowResultModal(true);
+      });
   }
 
   if (count == 0) {
