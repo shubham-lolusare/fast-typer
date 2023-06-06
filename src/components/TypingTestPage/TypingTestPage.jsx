@@ -5,6 +5,7 @@ import Keyboard from "./Keyboard";
 import { createRef, useEffect, useMemo, useRef, useState } from "react";
 import TypingResultModal from "./TypingResultModal";
 import LoadingPage from "../LoadingPage/LoadingPage";
+import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { collection, addDoc } from "firebase/firestore";
 import { auth } from "../../config/firebaseConfig";
@@ -229,11 +230,11 @@ export default function TypingTestPage() {
     } else {
       setTestState("end");
       setLoading(true);
-      stop();
+      postResults();
     }
   }
 
-  async function stop() {
+  function postResults() {
     addDoc(collection(db, uid), {
       wpm: correctWordCount,
       cpm: correctCharCount,
@@ -242,6 +243,7 @@ export default function TypingTestPage() {
           ? Math.round((correctWordCount / wordIndex) * 100)
           : 0
       }`,
+      timeStamp: new Date(),
     })
       .then(() => {
         setTestState("");
@@ -249,16 +251,24 @@ export default function TypingTestPage() {
         setShowResultModal(true);
       })
       .catch((error) => {
-        alert(error.message);
+        toast.error(`${error.message}`, {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+        });
       });
-
-    console.log("enter result");
   }
 
   if (testState === "start") start();
 
   return (
     <main className="bg-bgColor w-full h-screen flex flex-col">
+      <ToastContainer />
       <input
         type="text"
         ref={inputRef}
