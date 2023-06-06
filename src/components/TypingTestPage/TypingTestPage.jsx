@@ -222,17 +222,18 @@ export default function TypingTestPage() {
   }
 
   function start() {
-    setTimeout(() => {
-      if (count != 0) setCount(count - 1);
-      else return;
-    }, 1000);
+    if (count != 0) {
+      setTimeout(() => {
+        setCount(count - 1);
+      }, 1000);
+    } else {
+      setTestState("end");
+      setLoading(true);
+      stop();
+    }
   }
 
-  function stop() {
-    setCount(60);
-  }
-
-  if (testState === "end") {
+  async function stop() {
     addDoc(collection(db, uid), {
       wpm: correctWordCount,
       cpm: correctCharCount,
@@ -243,20 +244,16 @@ export default function TypingTestPage() {
       }`,
     })
       .then(() => {
-        setLoading(true);
-        setTestState("result");
-      })
-      .then(() => {
+        setTestState("");
         setLoading(false);
         setShowResultModal(true);
+      })
+      .catch((error) => {
+        alert(error.message);
       });
-  }
 
-  if (count == 0) {
-    setTestState("end");
+    console.log("enter result");
   }
-
-  if (testState == "end") stop();
 
   if (testState === "start") start();
 
@@ -309,7 +306,7 @@ export default function TypingTestPage() {
           </div>
         </div>
 
-        {testState === "result" ? (
+        {testState === "end" ? (
           <div className="text-5xl p-16 w-[80%] h-[100px] flex items-center justify-center bg-black/70 text-white rounded-2xl shadow-lg scrollbar">
             Test Over
           </div>
@@ -339,7 +336,7 @@ export default function TypingTestPage() {
           attemptedWords={wordIndex}
           setWordIndex={setWordIndex}
           setCharIndex={setCharIndex}
-          setTestState={setTestState}
+          setCount={setCount}
           showResultModal={showResultModal}
           setShowResultModal={setShowResultModal}
           setWords={setWords}

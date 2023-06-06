@@ -10,16 +10,16 @@ export default function TypingResultModal({
   attemptedWords,
   setWordIndex,
   setCharIndex,
-  setTestState,
   setShowResultModal,
   setWords,
+  setCount,
 }) {
   function handleReset() {
     setCorrectWordCount(0);
     setCorrectCharCount(0);
     setCharIndex(0);
     setWordIndex(0);
-    setTestState("");
+    setCount(60);
     setShowResultModal(false);
     setWords(randomWords({ min: 300, max: 1000 }));
   }
