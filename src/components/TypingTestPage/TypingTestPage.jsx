@@ -6,10 +6,11 @@ import { createRef, useEffect, useMemo, useRef, useState } from "react";
 import TypingResultModal from "./TypingResultModal";
 import LoadingPage from "../LoadingPage/LoadingPage";
 import "react-toastify/dist/ReactToastify.css";
-import { collection, doc, setDoc, addDoc } from "firebase/firestore";
+import { collection, addDoc } from "firebase/firestore";
 import { auth } from "../../config/firebaseConfig";
 import { db } from "../../config/firebaseConfig";
-import { Navigate, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { onAuthStateChanged } from "firebase/auth";
 
 export default function TypingTestPage() {
   let [words, setWords] = useState(randomWords({ min: 300, max: 1000 }));
@@ -24,6 +25,7 @@ export default function TypingTestPage() {
   let [testState, setTestState] = useState("");
   let [loading, setLoading] = useState(false);
   let [count, setCount] = useState(60);
+  let [uid, setUid] = useState();
   let navigate = useNavigate();
 
   let wordRefArr = useMemo(() => {
@@ -195,6 +197,14 @@ export default function TypingTestPage() {
       block: "center",
       inline: "center",
     });
+
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        setUid(user.uid);
+      } else {
+        navigate("/");
+      }
+    });
   }, [words]);
 
   function centerWord() {
@@ -222,18 +232,18 @@ export default function TypingTestPage() {
     setCount(60);
   }
 
-  addDoc(collection(db, "/cities/shubham"), {
-    name: "shuham",
-    country: "Japan",
-  });
-
   if (testState === "end") {
     setLoading(true);
     setTestState("result");
 
-    addDoc(collection(db, "/cities/shubham"), {
-      name: "shuham",
-      country: "Japan",
+    addDoc(collection(db, uid), {
+      wpm: correctWordCount,
+      cpm: correctCharCount,
+      accuracy: `${
+        correctWordCount != 0
+          ? Math.round((correctWordCount / wordIndex) * 100)
+          : 0
+      }`,
     }).then(() => {
       setLoading(false);
       setShowResultModal(true);
