@@ -27,6 +27,7 @@ export default function TypingTestPage() {
   let [loading, setLoading] = useState(false);
   let [count, setCount] = useState(60);
   let [uid, setUid] = useState();
+  let [userEmailName, setUserEmailName] = useState();
   let navigate = useNavigate();
 
   let wordRefArr = useMemo(() => {
@@ -202,6 +203,10 @@ export default function TypingTestPage() {
     onAuthStateChanged(auth, (user) => {
       if (user) {
         setUid(user.uid);
+        setUserEmailName(() => {
+          let str = user.email;
+          return str.slice(0, str.indexOf("@"));
+        });
       } else {
         navigate("/");
       }
@@ -235,7 +240,7 @@ export default function TypingTestPage() {
   }
 
   function postResults() {
-    addDoc(collection(db, uid), {
+    addDoc(collection(db, uid, `${userEmailName}-result`, "result"), {
       wpm: correctWordCount,
       cpm: correctCharCount,
       accuracy: `${
@@ -243,7 +248,7 @@ export default function TypingTestPage() {
           ? Math.round((correctWordCount / wordIndex) * 100)
           : 0
       }`,
-      timeStamp: new Date(),
+      timeStamp: new Date(Date.now()).toLocaleString().split(",")[0],
     })
       .then(() => {
         setTestState("");
@@ -261,6 +266,14 @@ export default function TypingTestPage() {
           progress: undefined,
           theme: "colored",
         });
+        setLoading(false);
+        setTestState("");
+        setCorrectWordCount(0);
+        setCorrectCharCount(0);
+        setCharIndex(0);
+        setWordIndex(0);
+        setCount(60);
+        setWords(randomWords({ min: 300, max: 1000 }));
       });
   }
 

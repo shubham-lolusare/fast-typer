@@ -1,73 +1,155 @@
 import Navbar from "../Navbar/Navbar";
-
-import {
-  Chart as ChartJS,
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  Title,
-  Tooltip,
-  Legend,
-} from "chart.js";
-import { Line } from "react-chartjs-2";
-
-ChartJS.register(
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  Title,
-  Tooltip,
-  Legend
-);
+import useTheme from "../ThemeSelector/Themehook";
+import LineGraph from "./LineGraph";
+import { db } from "../../config/firebaseConfig";
+import { collection, getDocs } from "firebase/firestore";
+import { auth } from "../../config/firebaseConfig";
+import { onAuthStateChanged } from "firebase/auth";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export default function Analysis() {
-  const options = {
-    responsive: true,
-    plugins: {
-      legend: {
-        position: "top",
-      },
-      title: {
-        display: true,
-        text: "Chart.js Line Chart",
-      },
-    },
-  };
+  let theme = useTheme();
+  let [uid, setUid] = useState();
+  let [userEmailName, setUserEmailName] = useState();
+  let [label] = useState([]);
+  let navigate = useNavigate();
+  let [dataSet, setDataSet] = useState({
+    label,
+    datasets: [],
+  });
+  let [totalTest, setTotalTest] = useState(0);
 
-  const labels = [
-    "January",
-    "February",
-    "March",
-    "April",
-    "May",
-    "June",
-    "July",
-  ];
+  useEffect(() => {
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        setUid(user.uid);
+        setUserEmailName(() => {
+          let str = user.email;
+          return str.slice(0, str.indexOf("@"));
+        });
+      } else {
+        navigate("/");
+      }
+    });
 
-  const data = {
-    labels,
-    datasets: [
-      {
-        label: "Dataset 1",
-        data: [100, 205, 350, 240, 150, 60, 470],
-        borderColor: "red",
-        backgroundColor: "rgba(255, 99, 132, 0.5)",
-      },
-      {
-        label: "Dataset 2",
-        data: [120, 210, 130, 540, 50, 60, 70],
-        borderColor: "rgb(53, 162, 235)",
-        backgroundColor: "rgba(53, 162, 235, 0.5)",
-      },
-    ],
-  };
+    getData(uid, `${userEmailName}-result`).then((data) => {
+      if (data[0].length == 0) {
+        toast.info("No test data found", {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+        });
+      }
+      setTotalTest(data[0].length);
+      setDataSet({
+        labels: data[3].map((element) => element),
+        datasets: [
+          {
+            label: "Words/min",
+            data: data[0].map((element) => element),
+            borderColor: theme.thematicColor,
+          },
+          {
+            label: "Characters/min",
+            data: data[1].map((element) => element),
+            borderColor: "#640064",
+          },
+          {
+            label: "Accuracy",
+            data: data[2].map((element) => element),
+            borderColor: "rgb(255, 69, 0)",
+          },
+        ],
+      });
+    });
+  }, [navigate, theme.thematicColor, uid, userEmailName]);
 
   return (
-    <div>
+    <div className="bg-bgColor w-full min-h-screen">
+      <ToastContainer />
       <Navbar />
-      <Line options={options} data={data} />
+      <div className="flex flex-col justify-center items-center p-4">
+        <div className="flex flex-col justify-center items-center gap-4">
+          <h1 className="text-center font-bold text-5xl text-textColor">
+            Test Analysis
+          </h1>
+          <div className="text-sm font-bold text-textColor">
+            Total tests taken: {totalTest}
+          </div>
+        </div>
+
+        <div className="w-3/5 h-3/5 p-4 rounded-2xl shadow-lg bg-bgColor ">
+          <LineGraph dataSet={dataSet} />
+        </div>
+
+        <div className="w-3/5 p-4 rounded-2xl shadow-lg bg-bgColor flex flex-col mt-4">
+          <div className="overflow-x-auto sm:-mx-6 lg:-mx-8">
+            <div className="inline-block min-w-full py-2 sm:px-6 lg:px-8">
+              <div className="overflow-hidden">
+                <table className="min-w-full text-left text-sm font-light">
+                  <thead className="border-b font-medium">
+                    <tr>
+                      <th scope="col" className="px-6 py-4">
+                        Sr No
+                      </th>
+                      <th scope="col" className="px-6 py-4">
+                        Words Per Min
+                      </th>
+                      <th scope="col" className="px-6 py-4">
+                        Characters Per Min
+                      </th>
+                      <th scope="col" className="px-6 py-4">
+                        Accuracy
+                      </th>
+                      <th scope="col" className="px-6 py-4">
+                        Test Date
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr className="border-b transition duration-300 ease-in-out hover:bg-thematicColor text-textColor font-normal">
+                      <td className="whitespace-nowrap px-6 py-4 font-medium">
+                        1
+                      </td>
+                      <td className="whitespace-nowrap px-6 py-4">Mark</td>
+                      <td className="whitespace-nowrap px-6 py-4">Otto</td>
+                      <td className="whitespace-nowrap px-6 py-4">@mdo</td>
+                      <td className="whitespace-nowrap px-6 py-4">@mdo</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   );
+}
+
+async function getData(uid, segment) {
+  let wpmArr = [];
+  let cpmArr = [];
+  let accArr = [];
+  let labelArr = [];
+
+  let querySnapshot = await getDocs(collection(db, uid, segment, "result"));
+
+  querySnapshot.forEach((doc) => {
+    let docObj = doc.data();
+    wpmArr.push(docObj.wpm);
+    cpmArr.push(docObj.cpm);
+    accArr.push(docObj.accuracy);
+    labelArr.push(docObj.timeStamp);
+  });
+
+  return [wpmArr, cpmArr, accArr, labelArr];
 }

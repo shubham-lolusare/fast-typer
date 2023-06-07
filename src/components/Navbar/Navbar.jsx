@@ -33,21 +33,7 @@ export default function Navbar() {
           <HiOutlineHome className="text-2xl" /> Home
         </div>
         <div className="inline-block h-[50px] min-h-[1em] w-0.5 self-stretch bg-thematicColor opacity-100 "></div>
-        <div
-          className="flex gap-2 justify-between items-center cursor-pointer"
-          onClick={() => {
-            onAuthStateChanged(auth, (user) => {
-              if (user) {
-                navigate("/compare");
-              } else {
-                navigate("/");
-              }
-            });
-          }}
-        >
-          <VscGitCompare className="text-2xl" /> Compare
-        </div>
-        <div className="inline-block h-[50px] min-h-[1em] w-0.5 self-stretch bg-thematicColor opacity-100 "></div>
+
         <div
           className="flex gap-2 justify-between items-center cursor-pointer"
           onClick={() => {
@@ -63,6 +49,23 @@ export default function Navbar() {
           <IoMdAnalytics className="text-2xl" /> Analysis
         </div>
         <div className="inline-block h-[50px] min-h-[1em] w-0.5 self-stretch bg-thematicColor opacity-100 "></div>
+
+        <div
+          className="flex gap-2 justify-between items-center cursor-pointer"
+          onClick={() => {
+            onAuthStateChanged(auth, (user) => {
+              if (user) {
+                navigate("/compare");
+              } else {
+                navigate("/");
+              }
+            });
+          }}
+        >
+          <VscGitCompare className="text-2xl" /> Compare
+        </div>
+        <div className="inline-block h-[50px] min-h-[1em] w-0.5 self-stretch bg-thematicColor opacity-100 "></div>
+
         <div
           className="flex gap-2 justify-between items-center cursor-pointer"
           onClick={() => {
