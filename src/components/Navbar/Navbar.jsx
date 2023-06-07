@@ -7,9 +7,19 @@ import { auth } from "../../config/firebaseConfig";
 import { useNavigate } from "react-router-dom";
 import { AiOutlineLogout } from "react-icons/ai";
 import { IoMdAnalytics } from "react-icons/io";
+import { useState, useEffect } from "react";
 
 export default function Navbar() {
   let navigate = useNavigate();
+  let [username, setUsername] = useState();
+
+  useEffect(() => {
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        setUsername(user.displayName);
+      }
+    });
+  }, [username]);
 
   return (
     <nav className="border-t-4 border-thematicColor w-full p-4 text-textColor flex justify-between items-center bg-bgColor shadow-lg sticky top-0 z-50">
@@ -78,8 +88,11 @@ export default function Navbar() {
             });
           }}
         >
-          <CgProfile className="text-2xl" /> Profile
+          <CgProfile className="text-2xl" /> {username}
         </div>
+        <div className="inline-block h-[50px] min-h-[1em] w-0.5 self-stretch bg-thematicColor opacity-100 "></div>
+        <div></div>
+        <ThemeSelector />
         <div className="inline-block h-[50px] min-h-[1em] w-0.5 self-stretch bg-thematicColor opacity-100 "></div>
         <div
           className="flex gap-2 justify-between items-center cursor-pointer"
@@ -93,10 +106,8 @@ export default function Navbar() {
               });
           }}
         >
-          <AiOutlineLogout className="text-2xl" /> Logout
+          <AiOutlineLogout className="text-2xl" title="Logout" />
         </div>
-        <div className="inline-block h-[50px] min-h-[1em] w-0.5 self-stretch bg-thematicColor opacity-100 "></div>
-        <ThemeSelector />
       </div>
     </nav>
   );

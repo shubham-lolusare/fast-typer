@@ -9,9 +9,11 @@ import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "../../config/firebaseConfig";
 import { Navigate } from "react-router-dom";
 import { useState } from "react";
+import LoadingPage from "../LoadingPage/LoadingPage";
 
 export default function HomePage() {
   let [userLoggedIn, setUserLoggedIn] = useState(false);
+  let [loading, setLoading] = useState(true);
 
   onAuthStateChanged(auth, (user) => {
     if (user) {
@@ -20,6 +22,7 @@ export default function HomePage() {
       }
     } else {
       setUserLoggedIn(false);
+      setLoading(false);
     }
   });
 
@@ -65,6 +68,7 @@ export default function HomePage() {
           </span>
         </p>
       </section>
+      {loading && <LoadingPage />}
     </main>
   );
 }

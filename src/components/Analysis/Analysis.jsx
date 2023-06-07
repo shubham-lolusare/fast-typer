@@ -9,6 +9,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import LoadingPage from "../LoadingPage/LoadingPage";
 
 export default function Analysis() {
   let theme = useTheme();
@@ -21,6 +22,8 @@ export default function Analysis() {
     datasets: [],
   });
   let [totalTest, setTotalTest] = useState(0);
+  let [tableBody, setTableBody] = useState([]);
+  let [loading, setLoading] = useState(true);
 
   useEffect(() => {
     onAuthStateChanged(auth, (user) => {
@@ -36,6 +39,7 @@ export default function Analysis() {
     });
 
     getData(uid, `${userEmailName}-result`).then((data) => {
+      setLoading(false);
       if (data[0].length == 0) {
         toast.info("No test data found", {
           position: "top-right",
@@ -48,7 +52,9 @@ export default function Analysis() {
           theme: "colored",
         });
       }
+
       setTotalTest(data[0].length);
+
       setDataSet({
         labels: data[3].map((element) => element),
         datasets: [
@@ -68,6 +74,26 @@ export default function Analysis() {
             borderColor: "rgb(255, 69, 0)",
           },
         ],
+      });
+
+      setTableBody(() => {
+        let tableCells = [];
+
+        for (let i = 0; i < data[0].length; i++) {
+          tableCells.push(
+            <tr className="border-b transition duration-300 ease-in-out hover:bg-thematicColor">
+              <td className="whitespace-nowrap px-6 py-4 font-medium">
+                {i + 1}
+              </td>
+              <td className="whitespace-nowrap px-6 py-4">{data[0][i]}</td>
+              <td className="whitespace-nowrap px-6 py-4">{data[1][i]}</td>
+              <td className="whitespace-nowrap px-6 py-4">{data[2][i]}</td>
+              <td className="whitespace-nowrap px-6 py-4">{data[3][i]}</td>
+            </tr>
+          );
+        }
+
+        return tableCells;
       });
     });
   }, [navigate, theme.thematicColor, uid, userEmailName]);
@@ -90,47 +116,43 @@ export default function Analysis() {
           <LineGraph dataSet={dataSet} />
         </div>
 
-        <div className="w-3/5 p-4 rounded-2xl shadow-lg bg-bgColor flex flex-col mt-4">
-          <div className="overflow-x-auto sm:-mx-6 lg:-mx-8">
-            <div className="inline-block min-w-full py-2 sm:px-6 lg:px-8">
-              <div className="overflow-hidden">
-                <table className="min-w-full text-left text-sm font-light">
-                  <thead className="border-b font-medium">
-                    <tr>
-                      <th scope="col" className="px-6 py-4">
-                        Sr No
-                      </th>
-                      <th scope="col" className="px-6 py-4">
-                        Words Per Min
-                      </th>
-                      <th scope="col" className="px-6 py-4">
-                        Characters Per Min
-                      </th>
-                      <th scope="col" className="px-6 py-4">
-                        Accuracy
-                      </th>
-                      <th scope="col" className="px-6 py-4">
-                        Test Date
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr className="border-b transition duration-300 ease-in-out hover:bg-thematicColor text-textColor font-normal">
-                      <td className="whitespace-nowrap px-6 py-4 font-medium">
-                        1
-                      </td>
-                      <td className="whitespace-nowrap px-6 py-4">Mark</td>
-                      <td className="whitespace-nowrap px-6 py-4">Otto</td>
-                      <td className="whitespace-nowrap px-6 py-4">@mdo</td>
-                      <td className="whitespace-nowrap px-6 py-4">@mdo</td>
-                    </tr>
-                  </tbody>
-                </table>
+        {totalTest != 0 && (
+          <div className="w-3/5 p-4 rounded-2xl shadow-lg bg-bgColor flex flex-col mt-4">
+            <div className="overflow-x-auto sm:-mx-6 lg:-mx-8">
+              <div className="inline-block min-w-full py-2 sm:px-6 lg:px-8">
+                <div className="overflow-hidden">
+                  <table className="min-w-full text-center text-textColor rounded-2xl">
+                    <caption className="text-xl font-bold mb-4">
+                      Test Data
+                    </caption>
+                    <thead className="border-b font-medium bg-thematicColor">
+                      <tr>
+                        <th scope="col" className="px-6 py-4">
+                          Sr No
+                        </th>
+                        <th scope="col" className="px-6 py-4">
+                          Words Per Min
+                        </th>
+                        <th scope="col" className="px-6 py-4">
+                          Characters Per Min
+                        </th>
+                        <th scope="col" className="px-6 py-4">
+                          Accuracy
+                        </th>
+                        <th scope="col" className="px-6 py-4">
+                          Test Date
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody>{tableBody}</tbody>
+                  </table>
+                </div>
               </div>
             </div>
           </div>
-        </div>
+        )}
       </div>
+      {loading && <LoadingPage />}
     </div>
   );
 }
