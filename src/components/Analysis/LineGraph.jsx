@@ -53,11 +53,5 @@ export default function LineGraph({ dataSet }) {
       },
     },
   };
-  return (
-    <Line
-      options={options}
-      data={dataSet}
-      className="min-h-[500px] min-w-full"
-    />
-  );
+  return <Line options={options} data={dataSet} className="min-h-[400px]" />;
 }

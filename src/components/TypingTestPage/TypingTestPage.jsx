@@ -226,7 +226,7 @@ export default function TypingTestPage() {
       "currentCursor"
     );
   }
-
+  console.log(testState);
   function start() {
     if (count != 0) {
       setTimeout(() => {
@@ -256,7 +256,6 @@ export default function TypingTestPage() {
         .join("/"),
     })
       .then(() => {
-        setTestState("");
         setLoading(false);
         setShowResultModal(true);
       })
@@ -334,7 +333,7 @@ export default function TypingTestPage() {
           </div>
         </div>
 
-        {testState === "end" ? (
+        {count == 0 ? (
           <div className="text-5xl p-16 w-[80%] h-[100px] flex items-center justify-center bg-black/70 text-white rounded-2xl shadow-lg scrollbar">
             Test Over
           </div>
@@ -369,6 +368,7 @@ export default function TypingTestPage() {
           setShowResultModal={setShowResultModal}
           setWords={setWords}
           typingBox={typingBox}
+          setTestState={setTestState}
         />
       )}
       {loading && <LoadingPage />}

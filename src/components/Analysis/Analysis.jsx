@@ -81,7 +81,10 @@ export default function Analysis() {
 
         for (let i = 0; i < data[0].length; i++) {
           tableCells.push(
-            <tr className="border-b transition duration-300 ease-in-out hover:bg-thematicColor">
+            <tr
+              key={i + 1}
+              className="border-b transition duration-300 ease-in-out hover:bg-thematicColor"
+            >
               <td className="whitespace-nowrap px-6 py-4 font-medium">
                 {i + 1}
               </td>
@@ -112,7 +115,7 @@ export default function Analysis() {
           </div>
         </div>
 
-        <div className="w-3/5 h-3/5 p-4 rounded-2xl shadow-lg bg-bgColor ">
+        <div className="w-full h-3/5 p-4 rounded-2xl shadow-lg bg-bgColor ">
           <LineGraph dataSet={dataSet} />
         </div>
 

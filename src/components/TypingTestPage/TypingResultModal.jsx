@@ -13,6 +13,7 @@ export default function TypingResultModal({
   setShowResultModal,
   setWords,
   setCount,
+  setTestState,
 }) {
   function handleReset() {
     setCorrectWordCount(0);
@@ -22,6 +23,7 @@ export default function TypingResultModal({
     setCount(60);
     setShowResultModal(false);
     setWords(randomWords({ min: 300, max: 1000 }));
+    setTestState("");
   }
 
   return (
