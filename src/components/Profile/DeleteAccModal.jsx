@@ -2,7 +2,7 @@
 import { RxCross1, RxGear } from "react-icons/rx";
 import { useState } from "react";
 import { auth } from "../../config/firebaseConfig";
-import { deleteUser, signOut, signInWithEmailAndPassword } from "firebase/auth";
+import { deleteUser, signInWithEmailAndPassword } from "firebase/auth";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import { AiOutlineEyeInvisible, AiOutlineEye } from "react-icons/ai";
