@@ -8,19 +8,21 @@ import {
   GoogleAuthProvider,
   signInWithPopup,
   sendEmailVerification,
+  signOut,
+  updateProfile,
 } from "firebase/auth";
 import Loading from "../LoadingPage/LoadingPage";
 import { useNavigate } from "react-router-dom";
 import { FcGoogle } from "react-icons/fc";
 
 import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export default function Signup() {
   let [passwordState, setPasswordState] = useState("hide");
   let [email, setEmail] = useState("");
   let [password, setPassword] = useState("");
   let [confPassword, setConfPassword] = useState("");
-  let [status, setStatus] = useState("");
   let [loading, setLoading] = useState(false);
   let navigate = useNavigate();
 
@@ -36,7 +38,16 @@ export default function Signup() {
       })
       .catch((error) => {
         setLoading(false);
-        setStatus(error.message);
+        toast.error(error.message, {
+          position: "top-right",
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+        });
       });
   }
 
@@ -47,35 +58,85 @@ export default function Signup() {
     if (password === confPassword) {
       createUserWithEmailAndPassword(auth, email, password)
         .then(() => {
+          if (auth.currentUser.displayName == null) {
+            updateProfile(auth.currentUser, {
+              displayName: auth.currentUser.email.slice(
+                0,
+                auth.currentUser.email.indexOf("@")
+              ),
+            });
+          }
           sendEmailVerification(auth.currentUser)
             .then(() => {
-              setLoading(false);
-              toast.success(
-                "Please verify the Email ID you have entered using the verification link sent!",
-                {
-                  position: "top-right",
-                  autoClose: 10000,
-                  hideProgressBar: false,
-                  closeOnClick: true,
-                  pauseOnHover: true,
-                  draggable: true,
-                  progress: undefined,
-                  theme: "colored",
-                }
-              );
-              setStatus("");
+              signOut(auth)
+                .then(() => {
+                  setLoading(false);
+                  toast.success(
+                    "Please verify the Email ID using the verification link sent to your email account!",
+                    {
+                      position: "top-right",
+                      autoClose: 2000,
+                      hideProgressBar: false,
+                      closeOnClick: true,
+                      pauseOnHover: true,
+                      draggable: true,
+                      progress: undefined,
+                      theme: "colored",
+                    }
+                  );
+                  navigate("/");
+                })
+                .catch((error) => {
+                  toast.error(error.message, {
+                    position: "top-right",
+                    autoClose: 2000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "colored",
+                  });
+                });
             })
             .catch((error) => {
-              setStatus(error.message);
+              toast.error(error.message, {
+                position: "top-right",
+                autoClose: 2000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "colored",
+              });
             });
         })
         .catch((error) => {
           setLoading(false);
-          setStatus(error.message);
+          toast.error(error.message, {
+            position: "top-right",
+            autoClose: 2000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "colored",
+          });
         });
     } else {
       setLoading(false);
-      setStatus("Two passwords do not match");
+      toast.error("Two passwords do not match", {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+      });
     }
   }
 
@@ -157,14 +218,10 @@ export default function Signup() {
           </label>
         </div>
 
-        <div className=" text-textColor font-bold mb-4">
-          {status !== "" ? status : ""}
-        </div>
-
         <input
           type="submit"
           value="Register"
-          className="w-[50%] p-2 pl-5 pr-5 font-bold shadow-md text-textColor bg-thematicColor/80 rounded-lg tracking-wider hover:bg-thematicColor/100 "
+          className="cursor-pointer w-[50%] p-2 pl-5 pr-5 font-bold shadow-md text-textColor bg-thematicColor/80 rounded-lg tracking-wider hover:bg-thematicColor/100 "
         />
       </form>
       <div className="w-[50%] text-center text-xs font-bold text-textColor">

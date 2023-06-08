@@ -7,19 +7,22 @@ import { auth } from "../../config/firebaseConfig";
 import { useNavigate } from "react-router-dom";
 import { AiOutlineLogout } from "react-icons/ai";
 import { IoMdAnalytics } from "react-icons/io";
-import { useState, useEffect } from "react";
+import { toast } from "react-toastify";
+import { useEffect, useState } from "react";
 
 export default function Navbar() {
   let navigate = useNavigate();
-  let [username, setUsername] = useState();
+  let [userName, setUserName] = useState("Profile");
+  let [profileUrl, setProfileUrl] = useState(null);
 
   useEffect(() => {
     onAuthStateChanged(auth, (user) => {
       if (user) {
-        setUsername(user.displayName);
+        setUserName(user.displayName);
+        setProfileUrl(user.photoURL);
       }
     });
-  }, [username]);
+  });
 
   return (
     <nav className="border-t-4 border-thematicColor w-full p-4 text-textColor flex justify-between items-center bg-bgColor shadow-lg sticky top-0 z-50">
@@ -31,13 +34,7 @@ export default function Navbar() {
         <div
           className="flex gap-2 justify-between items-center cursor-pointer"
           onClick={() => {
-            onAuthStateChanged(auth, (user) => {
-              if (user) {
-                navigate("/test");
-              } else {
-                navigate("/");
-              }
-            });
+            navigate("/test");
           }}
         >
           <HiOutlineHome className="text-2xl" /> Home
@@ -47,13 +44,7 @@ export default function Navbar() {
         <div
           className="flex gap-2 justify-between items-center cursor-pointer"
           onClick={() => {
-            onAuthStateChanged(auth, (user) => {
-              if (user) {
-                navigate("/analysis");
-              } else {
-                navigate("/");
-              }
-            });
+            navigate("/analysis");
           }}
         >
           <IoMdAnalytics className="text-2xl" /> Analysis
@@ -63,13 +54,7 @@ export default function Navbar() {
         <div
           className="flex gap-2 justify-between items-center cursor-pointer"
           onClick={() => {
-            onAuthStateChanged(auth, (user) => {
-              if (user) {
-                navigate("/compare");
-              } else {
-                navigate("/");
-              }
-            });
+            navigate("/compare");
           }}
         >
           <VscGitCompare className="text-2xl" /> Compare
@@ -79,16 +64,26 @@ export default function Navbar() {
         <div
           className="flex gap-2 justify-between items-center cursor-pointer"
           onClick={() => {
-            onAuthStateChanged(auth, (user) => {
-              if (user) {
-                navigate("/profile");
-              } else {
-                navigate("/");
-              }
-            });
+            navigate("/profile");
           }}
         >
-          <CgProfile className="text-2xl" /> {username}
+          {profileUrl != null ? (
+            <div className="w-[40px] h-[40px] rounded-full">
+              <img
+                src={
+                  auth.currentUser != null
+                    ? auth.currentUser.photoURL
+                    : profileUrl
+                }
+                alt="Profile image"
+                className="object-contain w-full h-full rounded-full bg-thematicColor"
+              />
+            </div>
+          ) : (
+            <CgProfile className="text-2xl" />
+          )}
+
+          {auth.currentUser != null ? auth.currentUser.displayName : userName}
         </div>
         <div className="inline-block h-[50px] min-h-[1em] w-0.5 self-stretch bg-thematicColor opacity-100 "></div>
         <div></div>
@@ -102,7 +97,16 @@ export default function Navbar() {
                 navigate("/");
               })
               .catch((error) => {
-                alert(error.message);
+                toast.error(error.message, {
+                  position: "top-right",
+                  autoClose: 2000,
+                  hideProgressBar: false,
+                  closeOnClick: true,
+                  pauseOnHover: true,
+                  draggable: true,
+                  progress: undefined,
+                  theme: "colored",
+                });
               });
           }}
         >

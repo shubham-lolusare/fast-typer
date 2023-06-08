@@ -1,0 +1,13 @@
+.imageBorder {
+  animation: blink 0.75s ease infinite;
+}
+
+@keyframes blink {
+  from,
+  to {
+    border-color: transparent;
+  }
+  50% {
+    @apply border-thematicColor;
+  }
+}

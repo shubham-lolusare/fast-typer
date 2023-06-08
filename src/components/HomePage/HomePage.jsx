@@ -8,22 +8,23 @@ import { FaGithubSquare } from "react-icons/fa";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "../../config/firebaseConfig";
 import { Navigate } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import LoadingPage from "../LoadingPage/LoadingPage";
 
 export default function HomePage() {
   let [userLoggedIn, setUserLoggedIn] = useState(false);
   let [loading, setLoading] = useState(true);
-
-  onAuthStateChanged(auth, (user) => {
-    if (user) {
-      if (user.emailVerified) {
-        setUserLoggedIn(true);
+  useEffect(() => {
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        if (user.emailVerified === true) {
+          setUserLoggedIn(true);
+        }
+      } else {
+        setUserLoggedIn(false);
+        setLoading(false);
       }
-    } else {
-      setUserLoggedIn(false);
-      setLoading(false);
-    }
+    });
   });
 
   return (

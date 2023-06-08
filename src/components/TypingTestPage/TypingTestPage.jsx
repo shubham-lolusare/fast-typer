@@ -11,7 +11,7 @@ import { collection, addDoc } from "firebase/firestore";
 import { auth } from "../../config/firebaseConfig";
 import { db } from "../../config/firebaseConfig";
 import { useNavigate } from "react-router-dom";
-import { onAuthStateChanged, updateProfile } from "firebase/auth";
+import { onAuthStateChanged } from "firebase/auth";
 
 export default function TypingTestPage() {
   let [words, setWords] = useState(randomWords({ min: 300, max: 1000 }));
@@ -207,11 +207,6 @@ export default function TypingTestPage() {
           let str = user.email;
           return str.slice(0, str.indexOf("@"));
         });
-        if (user.displayName == null) {
-          updateProfile(user, {
-            displayName: user.email.slice(0, user.email.indexOf("@")),
-          });
-        }
       } else {
         navigate("/");
       }
@@ -268,7 +263,7 @@ export default function TypingTestPage() {
       .catch((error) => {
         toast.error(`${error.message}`, {
           position: "top-right",
-          autoClose: 5000,
+          autoClose: 2000,
           hideProgressBar: false,
           closeOnClick: true,
           pauseOnHover: true,

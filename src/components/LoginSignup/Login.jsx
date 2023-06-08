@@ -7,16 +7,18 @@ import {
   GoogleAuthProvider,
   signInWithPopup,
   signInWithEmailAndPassword,
+  signOut,
 } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
 import ForgetPasswordModal from "../ForgetPasswordModal/ForgetPasswordModal";
+
+import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 export default function Login() {
   let [passwordState, setPasswordState] = useState("hide");
   let [loading, setLoading] = useState(false);
   let [showModal, setShowModal] = useState(false);
-  let [status, setStatus] = useState("");
   let [email, setEmail] = useState("");
   let [password, setPassword] = useState("");
 
@@ -33,7 +35,16 @@ export default function Login() {
       })
       .catch((error) => {
         setLoading(false);
-        setStatus(error.message);
+        toast.error(error.message, {
+          position: "top-right",
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+        });
       });
   }
 
@@ -47,14 +58,47 @@ export default function Login() {
         if (userCredential.user.emailVerified) {
           navigate("/test");
         } else {
-          setStatus(
-            "Your Email ID is not verified yet. Please verify your Email ID using the verification link sent"
-          );
+          signOut(auth)
+            .then(() => {
+              toast.error("Your Email ID is not verified yet!", {
+                position: "top-right",
+                autoClose: 2000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "colored",
+              });
+              setLoading(false);
+              navigate("/");
+            })
+            .catch((error) => {
+              toast.error(error.message, {
+                position: "top-right",
+                autoClose: 2000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "colored",
+              });
+            });
         }
       })
       .catch((error) => {
         setLoading(false);
-        setStatus(error.message);
+        toast.error(error.message, {
+          position: "top-right",
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+        });
       });
   }
 
@@ -117,10 +161,6 @@ export default function Login() {
           </label>
         </div>
 
-        <div className=" text-textColor font-bold mb-4">
-          {status !== "" ? status : ""}
-        </div>
-
         <p
           onClick={() => setShowModal(!showModal)}
           className="mb-4 text-textColor text-sm font-bold underline underline-offset-2 cursor-pointer hover:text-[15px] transition-all duration-75 ease-linear"
@@ -131,7 +171,7 @@ export default function Login() {
         <input
           type="submit"
           value="Login"
-          className="w-[50%] p-2 pl-5 pr-5 font-bold shadow-md text-textColor bg-thematicColor/80 rounded-lg tracking-wider hover:bg-thematicColor/100 "
+          className="cursor-pointer w-[50%] p-2 pl-5 pr-5 font-bold shadow-md text-textColor bg-thematicColor/80 rounded-lg tracking-wider hover:bg-thematicColor/100 "
         />
       </form>
 
@@ -148,6 +188,7 @@ export default function Login() {
           Continue with Google
         </button>
       </div>
+      <ToastContainer />
       <p className="text-textColor text-sm">
         <strong>Note:</strong> If you do not have your account with us, Click on{" "}
         <b>SIGNUP</b>
