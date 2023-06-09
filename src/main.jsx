@@ -20,6 +20,7 @@ import HomePage from "./components/HomePage/HomePage.jsx";
 import TypingTestPage from "./components/TypingTestPage/TypingTestPage";
 import Profile from "./components/Profile/Profile";
 import Analysis from "./components/Analysis/Analysis";
+import Feedback from "./components/FeedBackPage/FeedbackPage";
 
 const router = createHashRouter(
   createRoutesFromElements(
@@ -28,6 +29,7 @@ const router = createHashRouter(
       <Route path="test" element={<TypingTestPage />} />
       <Route path="profile" element={<Profile />} />
       <Route path="analysis" element={<Analysis />} />
+      <Route path="feedback" element={<Feedback />} />
     </Route>
   )
 );

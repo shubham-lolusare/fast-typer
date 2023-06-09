@@ -210,7 +210,8 @@ function getTimeAsHHMM(str) {
 
   for (let i = 1; i < tempArr[1].length; i++) {
     if (tempArr[1].charAt(i) == ")") {
-      return tempStr;
+      let temp = tempStr.split("/");
+      return `${temp[0]}:${temp[1]}`;
     } else {
       tempStr += tempArr[1].charAt(i);
     }

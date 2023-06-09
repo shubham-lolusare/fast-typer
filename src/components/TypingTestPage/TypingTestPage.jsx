@@ -3,17 +3,19 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Navbar from "../Navbar/Navbar";
 import Loading from "../LoadingPage/LoadingPage";
+import { useNavigate } from "react-router-dom";
 
 let TimeModePage = lazy(() => import("./TimeModePage"));
 let WordModePage = lazy(() => import("./WordModePage"));
 
 export default function TypingTestPage() {
   let [testMode, setTestMode] = useState("none");
+  let navigate = useNavigate();
 
   return (
     <Suspense fallback={<Loading />}>
       {" "}
-      <main className="bg-[url(background)] w-full h-screen flex flex-col transition-all duration-500 ease-in-out animate-fade-in">
+      <main className="bg-bgColor w-full h-screen flex flex-col transition-all duration-500 ease-in-out animate-fade-in">
         <Navbar />
         <ToastContainer />
         {testMode == "none" && (
@@ -61,7 +63,12 @@ export default function TypingTestPage() {
               </article>
             </section>
             <footer className="absolute bottom-0 p-2 bg-thematicColor text-textColor  rounded-t-xl shadow-lg">
-              <button className="cursor-pointer text-base p-1 pl-2 pr-2 bg-bgColor text-textColor shadow-md rounded hover:bg-green-600 hover:text-white">
+              <button
+                onClick={() => {
+                  navigate("/feedback");
+                }}
+                className="cursor-pointer p-1 pl-2 pr-2 bg-bgColor text-textColor shadow-md rounded hover:bg-green-600 hover:text-white"
+              >
                 Feedback
               </button>
             </footer>
