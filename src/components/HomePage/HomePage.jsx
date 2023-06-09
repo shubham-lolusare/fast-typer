@@ -28,7 +28,7 @@ export default function HomePage() {
   });
 
   return (
-    <main className="h-screen w-full p-4 flex gap-4 bg-bgColor">
+    <main className="h-screen w-full p-4 flex gap-4 bg-bgColor animate-fade-in transition-all duration-500 ease-in-out">
       {userLoggedIn && <Navigate to="/test" replace />}
       <section className="flex flex-col justify-between">
         {" "}

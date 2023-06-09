@@ -1,7 +1,6 @@
 import ThemeSelector from "../ThemeSelector/ThemeSelector";
 import { CgProfile } from "react-icons/cg";
 import { HiOutlineHome } from "react-icons/hi";
-import { VscGitCompare } from "react-icons/vsc";
 import { onAuthStateChanged, signOut } from "firebase/auth";
 import { auth } from "../../config/firebaseConfig";
 import { useNavigate } from "react-router-dom";
@@ -54,16 +53,6 @@ export default function Navbar() {
         <div
           className="flex gap-2 justify-between items-center cursor-pointer"
           onClick={() => {
-            navigate("/compare");
-          }}
-        >
-          <VscGitCompare className="text-2xl" /> Compare
-        </div>
-        <div className="inline-block h-[50px] min-h-[1em] w-0.5 self-stretch bg-thematicColor opacity-100 "></div>
-
-        <div
-          className="flex gap-2 justify-between items-center cursor-pointer"
-          onClick={() => {
             navigate("/profile");
           }}
         >
@@ -86,7 +75,6 @@ export default function Navbar() {
           {auth.currentUser != null ? auth.currentUser.displayName : userName}
         </div>
         <div className="inline-block h-[50px] min-h-[1em] w-0.5 self-stretch bg-thematicColor opacity-100 "></div>
-        <div></div>
         <ThemeSelector />
         <div className="inline-block h-[50px] min-h-[1em] w-0.5 self-stretch bg-thematicColor opacity-100 "></div>
         <div

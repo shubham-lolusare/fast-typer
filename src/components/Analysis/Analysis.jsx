@@ -78,20 +78,21 @@ export default function Analysis() {
 
       setTableBody(() => {
         let tableCells = [];
+        let srno = 0;
 
-        for (let i = 0; i < data[0].length; i++) {
+        for (let i = data[0].length - 1; i >= 0; i--, srno++) {
           tableCells.push(
             <tr
               key={i + 1}
               className="border-b transition duration-300 ease-in-out hover:bg-thematicColor"
             >
               <td className="whitespace-nowrap px-6 py-4 font-medium">
-                {i + 1}
+                {srno + 1}
               </td>
               <td className="whitespace-nowrap px-6 py-4">{data[0][i]}</td>
               <td className="whitespace-nowrap px-6 py-4">{data[1][i]}</td>
               <td className="whitespace-nowrap px-6 py-4">{data[2][i]}</td>
-              <td className="whitespace-nowrap px-6 py-4">{data[3][i]}</td>
+              <td className="whitespace-nowrap px-6 py-4">{`${data[3][i]}, ${data[4][i]}`}</td>
             </tr>
           );
         }
@@ -102,7 +103,7 @@ export default function Analysis() {
   }, [navigate, theme.thematicColor, uid, userEmailName]);
 
   return (
-    <div className="bg-bgColor w-full min-h-screen">
+    <div className="bg-bgColor w-full min-h-screen animate-fade-in transition-all duration-500 ease-in-out">
       <ToastContainer />
       <Navbar />
       <div className="flex flex-col justify-center items-center p-4">
@@ -115,7 +116,7 @@ export default function Analysis() {
           </div>
         </div>
 
-        <div className="w-full h-3/5 p-4 rounded-2xl shadow-lg bg-bgColor ">
+        <div className="w-[80%] h-3/5 p-4 rounded-2xl shadow-lg bg-bgColor ">
           <LineGraph dataSet={dataSet} />
         </div>
 
@@ -143,7 +144,7 @@ export default function Analysis() {
                           Accuracy
                         </th>
                         <th scope="col" className="px-6 py-4">
-                          Test Date
+                          Test Date & Time
                         </th>
                       </tr>
                     </thead>
@@ -165,16 +166,55 @@ async function getData(uid, segment) {
   let cpmArr = [];
   let accArr = [];
   let labelArr = [];
+  let timeArr = [];
+  let docObjArr = [];
 
   let querySnapshot = await getDocs(collection(db, uid, segment, "result"));
 
   querySnapshot.forEach((doc) => {
-    let docObj = doc.data();
-    wpmArr.push(docObj.wpm);
-    cpmArr.push(docObj.cpm);
-    accArr.push(docObj.accuracy);
-    labelArr.push(docObj.timeStamp);
+    docObjArr.push(doc.data());
   });
 
-  return [wpmArr, cpmArr, accArr, labelArr];
+  docObjArr.sort((a, b) => {
+    if (b.timeStamp > a.timeStamp) return -1;
+    else return 1;
+  });
+  // console.log("ascending", docObjArr);
+
+  for (let i = 0; i < docObjArr.length; i++) {
+    wpmArr.push(docObjArr[i].wpm);
+    cpmArr.push(docObjArr[i].cpm);
+    accArr.push(docObjArr[i].accuracy);
+    labelArr.push(getDateAsDDMMYYYY(docObjArr[i].timeStamp));
+    timeArr.push(getTimeAsHHMM(docObjArr[i].timeStamp));
+  }
+
+  return [wpmArr, cpmArr, accArr, labelArr, timeArr];
+}
+
+function getDateAsDDMMYYYY(str) {
+  let tempStr = "";
+
+  for (let i = 1; i < str.length; i++) {
+    if (str.charAt(i) == ")") {
+      return tempStr;
+    } else {
+      tempStr += str.charAt(i);
+    }
+  }
+}
+
+function getTimeAsHHMM(str) {
+  let tempStr = "";
+  let tempArr = str.split("+");
+
+  for (let i = 1; i < tempArr[1].length; i++) {
+    if (tempArr[1].charAt(i) == ")") {
+      return tempStr;
+    } else {
+      tempStr += tempArr[1].charAt(i);
+    }
+  }
+
+  return `${tempArr[1]}`;
 }

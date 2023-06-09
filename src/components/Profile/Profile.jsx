@@ -154,15 +154,15 @@ export default function Profile() {
   }
 
   return (
-    <div className="w-full h-screen flex flex-col">
+    <div className="w-full h-screen flex flex-col animate-fade-in tracking-wider transition-all duration-500 ease-in-out">
       <ToastContainer />
       <Navbar />
-      <div className="bg-bgColor flex-1 flex justify-center p-4">
+      <div className="bg-bgColor flex-1 flex justify-center p-4 text-base">
         <div className="flex w-[40%] flex-col justify-between gap-4 items-center rounded-3xl shadow-lg p-4">
           <h1 className="text-4xl font-bold text-textColor">
             Your Profile Details
           </h1>
-          <div className="w-[40%] flex flex-col gap-4 justify-center items-center">
+          <div className="w-full flex flex-col gap-4 justify-center items-center">
             <div className="flex w-[250px] h-[200px] justify-center items-center ">
               {img != null ? (
                 <img
@@ -176,10 +176,10 @@ export default function Profile() {
                 <FaUserAlt className="text-[200px]" />
               )}
             </div>
-            <div>
-              <div className="mb-3">
+            <div className="flex gap-4 justify-between items-center">
+              <div>
                 <input
-                  className="relative m-0 block w-full min-w-0 flex-auto rounded border border-solid border-textColor bg-clip-padding px-3 py-[0.32rem] text-base font-normal text-textColor transition duration-300 ease-in-out file:-mx-3 file:-my-[0.32rem] file:overflow-hidden file:rounded-none file:border-0 file:border-solid file:border-inherit file:bg-thematicColor/90 file:px-3 file:py-[0.32rem] file:cursor-pointer file:text-textColor file:transition file:duration-150 file:ease-in-out file:[border-inline-end-width:1px] file:[margin-inline-end:0.75rem] hover:file:bg-thematicColor focus:border-primary focus:text-textColor focus:shadow-te-primary focus:outline focus:outline-2 focus:outline-thematicColor"
+                  className="flex-1 relative m-0 block w-full rounded border border-solid border-textColor bg-clip-padding px-3 py-[0.32rem] text-base font-normal text-textColor transition duration-300 ease-in-out file:-mx-3 file:-my-[0.32rem] file:overflow-hidden file:rounded-none file:border-0 file:border-solid file:border-inherit file:bg-thematicColor/90 file:px-3 file:py-[0.32rem] file:cursor-pointer file:text-textColor file:transition file:duration-150 file:ease-in-out file:[border-inline-end-width:1px] file:[margin-inline-end:0.75rem] hover:file:bg-thematicColor focus:border-primary focus:text-textColor focus:shadow-te-primary focus:outline focus:outline-2 focus:outline-thematicColor"
                   type="file"
                   accept="image/*"
                   onChange={(e) => {
@@ -191,14 +191,14 @@ export default function Profile() {
               </div>
               <button
                 onClick={handleUpdateProfilePic}
-                className=" w-full p-2 pl-6 pr-6 rounded-xl shadow-md bg-thematicColor cursor-pointer"
+                className="flex-1 p-2 pl-6 pr-6 rounded-lg shadow-md bg-thematicColor cursor-pointer"
               >
                 Update profile photo
               </button>
             </div>
           </div>
 
-          <div className="grid grid-cols-[max-content_minmax(0px,_1fr)] gap-2 place-content-evenly text-textColor">
+          <div className="w-full grid grid-cols-[max-content_minmax(0px,_1fr)] gap-2 place-content-evenly text-textColor">
             <div className="border-textColor border p-3 rounded-lg font-semibold">
               Username{" "}
             </div>
@@ -219,7 +219,7 @@ export default function Profile() {
             <div className="border-textColor border p-3 rounded-lg">{doj}</div>
           </div>
 
-          <div className="flex w-full gap-4 justify-center items-center text-textColor">
+          <div className="flex w-full gap-4 justify-between items-center text-textColor">
             <button
               onClick={handleResetPassword}
               className="p-2 pl-6 pr-6 rounded-xl shadow-md bg-thematicColor cursor-pointer"

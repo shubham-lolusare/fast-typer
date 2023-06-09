@@ -143,7 +143,9 @@ export default function Signup() {
   return (
     <div className="p-4 flex flex-col gap-4">
       <form className="flex flex-col text-textColor" onSubmit={handleSignup}>
-        <h1 className="text-xl mb-4 text-textColor">Register with us</h1>
+        <h1 className="text-xl mb-4 text-textColor font-semibold">
+          Register with us
+        </h1>
         <div className="relative mb-3">
           <input
             type="email"

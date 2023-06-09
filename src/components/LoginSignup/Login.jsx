@@ -105,7 +105,9 @@ export default function Login() {
   return (
     <div className="p-4 flex flex-col gap-4">
       <form className="flex flex-col" onSubmit={handleLogin}>
-        <h1 className="text-xl mb-4 text-textColor">Login into your Account</h1>
+        <h1 className="text-xl mb-4 text-textColor font-semibold">
+          Login into your Account
+        </h1>
         <div className="relative mb-3">
           <input
             type="email"

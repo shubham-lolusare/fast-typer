@@ -22,7 +22,7 @@ export default function LoginSignup() {
   }`;
 
   return (
-    <article className="shadow-lg rounded-2xl ">
+    <article className="shadow-lg rounded-2xl">
       <div className="flex justify-evenly">
         <button className={loginStyle} onClick={() => setUserChoice("login")}>
           LOGIN

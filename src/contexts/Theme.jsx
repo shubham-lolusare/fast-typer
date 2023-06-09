@@ -10,6 +10,7 @@ export function ThemeProvider(props) {
   function changeTheme(value) {
     setTheme(value);
     document.documentElement.setAttribute("class", `theme-${value}`);
+    localStorage.setItem("fast-typer-theme", value);
   }
 
   return (

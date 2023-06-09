@@ -4,7 +4,13 @@ import { ThemeContext } from "../../contexts/Theme";
 import { Select, initTE } from "tw-elements";
 
 export default function ThemeSelector() {
-  let [themeValue, setThemeValue] = useState("light");
+  let [themeValue, setThemeValue] = useState(
+    `${
+      localStorage.getItem("fast-typer-theme") != null
+        ? localStorage.getItem("fast-typer-theme")
+        : "light"
+    }`
+  );
 
   let { changeTheme } = useContext(ThemeContext);
 
@@ -24,12 +30,14 @@ export default function ThemeSelector() {
         name="theme"
         id="theme"
         onChange={(e) => setThemeValue(e.target.value)}
+        value={themeValue}
       >
-        <option value="light" defaultValue>
-          Yellow Sunrise
-        </option>
+        <option value="light">Yellow Sunrise</option>
         <option value="dark">Sleek & Modern</option>
         <option value="ice">Icy Blues & Grays</option>
+        <option value="red">Red Maharaja</option>
+        <option value="gold">Golden Era</option>
+        <option value="white">Formal Whites</option>
       </select>
     </div>
   );
