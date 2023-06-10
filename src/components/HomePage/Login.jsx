@@ -19,7 +19,7 @@ import { FcGoogle } from "react-icons/fc";
 
 // importing components
 import Loading from "../LoadingPage/LoadingPage";
-import ForgetPasswordModal from "../ForgetPasswordModal/ForgetPasswordModal";
+import ForgetPasswordModal from "./ForgetPasswordModal";
 
 // importing react-router module hook
 import { useNavigate } from "react-router-dom";

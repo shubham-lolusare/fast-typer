@@ -15,7 +15,7 @@ export default {
     screens: {
       md: { max: "1250px" },
       sm: { max: "912px" },
-      mobile: { max: "500px" },
+      mobile: { max: "550px" },
       xs: { max: "300px" },
       tall: { raw: "(max-height: 610px)" },
     },

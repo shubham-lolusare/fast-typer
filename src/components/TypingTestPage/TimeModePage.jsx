@@ -1,35 +1,118 @@
 /* eslint-disable react/prop-types */
-import randomWords from "random-words";
-import "./TypingTestPage.css";
-import Keyboard from "./Keyboard";
+/*
+  This is the time mode typing test component
+
+  In this mode the user will be give a time slot in which he have to type as much words as he can 
+  and the words per min will be calculated accordingly
+
+  After taking test the user results are posted to the firebase automatically
+
+  There are various time modes in for which the user have to select but by default 1 min time slot is selected
+*/
+
 import { createRef, useEffect, useMemo, useRef, useState } from "react";
+import "./TypingTestPage.css";
+
+// importing random words module
+import randomWords from "random-words";
+
+// importing components
+import Keyboard from "./Keyboard";
 import TimeModeResultModal from "./TimeModeResultModal";
 import LoadingPage from "../LoadingPage/LoadingPage";
+
+// importing toast
 import { toast } from "react-toastify";
+
+// importing react router hook
+import { useNavigate } from "react-router-dom";
+
+// importing firebase related modules
 import { collection, addDoc } from "firebase/firestore";
 import { auth } from "../../config/firebaseConfig";
 import { db } from "../../config/firebaseConfig";
-import { useNavigate } from "react-router-dom";
 import { onAuthStateChanged } from "firebase/auth";
 
 export default function TimeModePage({ setTestMode }) {
+  // state for storing the random words generated
+
   let [words, setWords] = useState(randomWords({ min: 300, max: 2000 }));
+
+  // state for storing the dom reference of input and the typing box resp.
   let inputRef = useRef(null);
   let typingBox = useRef(null);
+
+  // state for storing the current key press
   let [keypress, setKeyPress] = useState();
+
+  /* states for storing the word index and character index
+  So the algorithm is that, we are bifurcating the words generated, in words div and the respective word's character div
+  So lets say the random words generated is ["shubham","rakesh"]
+  So we are bifurcating it in to following html
+  <div>
+    <div>
+      <div>s</div>
+      <div>h</div>
+      <div>u</div>
+      <div>b</div>
+      <div>h</div>
+      <div>a</div>
+      <div>m</div>
+    </div>
+    <div>
+      <div>r</div>
+      <div>a</div>
+      <div>k</div>
+      <div>e</div>
+      <div>s</div>
+      <div>h</div>
+    </div>
+ </div>
+ so in this way we will be able to cross check the letters and words typed by the user are correct or not
+ In dom to represent the pointer references for calculation we are creating two indexes
+ word index to keep the track of the word that the user currently is typing
+ and char index to keep the track of the character in the word the user is typing.
+  */
   let [wordIndex, setWordIndex] = useState(0);
   let [charIndex, setCharIndex] = useState(0);
+
+  /*using above algorithm we will be able to checck the correct word count, correct characte count which will be 
+  represented by the below two states*/
   let [correctWordCount, setCorrectWordCount] = useState(0);
   let [correctCharCount, setCorrectCharCount] = useState(0);
+
+  // This state is use to manage the display of result modal
   let [showResultModal, setShowResultModal] = useState(false);
+
+  // This state is responsible to store the current state of the state
   let [testState, setTestState] = useState("");
+
+  /*state for setting the display of loading page. The loading page will 
+  be shown when the network fethching request are done. */
   let [loading, setLoading] = useState(false);
+
+  // this state is used for setting the timer and displying the second remaining
   let [count, setCount] = useState(60);
+
+  // this states are used to store the uid of the current user and their email name to generate the firestore collection segment
   let [uid, setUid] = useState();
   let [userEmailName, setUserEmailName] = useState();
-  let navigate = useNavigate();
+
+  /* This state is used for storing the time slot values
+  The allowed slots are 15s, 30s, 1min and 5min
+  */
   let [selectedTime, setSelectedTime] = useState(60);
 
+  // this hook is used for the navigation to other routes
+  let navigate = useNavigate();
+
+  /* So according to the above discussed algorithm we will be requiring the dom references
+  for the word. DOM references are note requied for individual characters as we can easily access them using the
+  word DOM references.
+  To get that references we are creating the references with the help of createRef() function and then storing it in array
+  Since it is a expensive calcultion we are memoizing it with the help of useMemo() hook and it will only be executed 
+  when the generated words in the words state changes.
+  */
   let wordRefArr = useMemo(() => {
     return Array(words.length)
       .fill(0)
@@ -38,6 +121,11 @@ export default function TimeModePage({ setTestMode }) {
       });
   }, [words]);
 
+  /*According to the above discussed algorithm we are creating the DOM elements
+  Since the DOM elements creation is a very expensive calculation we are memoizing it and the new DOM element swill only be created
+  if the words state changes
+  We will also add the above created DOM reference references to the individual words element
+  */
   let wordData = useMemo(() => {
     return words.map((word, index) => {
       return (
@@ -57,6 +145,18 @@ export default function TimeModePage({ setTestMode }) {
     });
   }, [words, wordRefArr]);
 
+  /*This function is entirely responsible for the function of the type box we see
+
+  So the idea is, we have created on input box and hide it.
+  So whenever the user click on the typing box of the ui, the hidden input box will get focussed and user will be
+  able to enter the characters but not see them
+
+  As we are storing the DOM reference of hidden input box in inputRef using useRef() hook, we will be able to get the value 
+  as the user types.
+
+  On each change of the hidden input box, this handle type function will be invoked and using the DOM references of the 
+  typing box words we will be ble to manipulate the DOM
+   */
   function handleType(e) {
     if (
       (e.keyCode >= 65 && e.keyCode <= 90) ||

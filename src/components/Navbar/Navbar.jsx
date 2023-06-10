@@ -44,6 +44,24 @@ export default function Navbar() {
         setProfileUrl(user.photoURL);
       }
     });
+
+    // navbar reposiveness is decided by this function
+    // below 912px the content of navbar is hidden and the option icon is shown
+    window.addEventListener("resize", () => {
+      if (window.outerWidth > 912) {
+        setNavShow(true);
+      } else {
+        setNavShow(false);
+      }
+    });
+
+    return window.removeEventListener("resize", () => {
+      if (window.outerWidth > 912) {
+        setNavShow(true);
+      } else {
+        setNavShow(false);
+      }
+    });
   });
 
   return (
@@ -56,31 +74,31 @@ export default function Navbar() {
 
       <div className="flex justify-center items-center gap-4 h-full">
         {navShow && (
-          <div className="flex gap-4 md:flex-col md:w-full md:absolute md:top-[80px] md:left-0 md:p-4 md:pl-6 md:pr-6 md:z-[1000] md:bg-bgColor md:shadow-md">
+          <div className="flex gap-4 sm:flex-col sm:w-full sm:absolute sm:top-[80px] sm:left-0 sm:p-4 sm:pl-6 sm:pr-6 sm:z-[1000] sm:bg-bgColor sm:shadow-sm">
             {/* Home tab */}
             <div
-              className="flex gap-2 justify-between items-center cursor-pointer md:justify-start md:w-full md:p-3 md:border md:border-thematicColor md:rounded-lg"
+              className="flex gap-2 justify-between items-center cursor-pointer sm:justify-start sm:w-full sm:p-3 sm:border sm:border-thematicColor sm:rounded-lg"
               onClick={() => {
                 navigate("/test");
               }}
             >
               <HiOutlineHome className="text-2xl" /> Home
             </div>
-            <div className="inline-block h-[50px] min-h-[1em] w-0.5 self-stretch bg-thematicColor opacity-100 md:hidden"></div>
+            <div className="inline-block h-[50px] min-h-[1em] w-0.5 self-stretch bg-thematicColor opacity-100 sm:hidden"></div>
             {/* Analysis tab */}
             <div
-              className="flex gap-2 justify-between items-center cursor-pointer md:justify-start md:w-full md:p-3 md:border md:border-thematicColor md:rounded-lg"
+              className="flex gap-2 justify-between items-center cursor-pointer sm:justify-start sm:w-full sm:p-3 sm:border sm:border-thematicColor sm:rounded-lg"
               onClick={() => {
                 navigate("/analysis");
               }}
             >
               <IoMdAnalytics className="text-2xl" /> Analysis
             </div>
-            <div className="inline-block h-[50px] min-h-[1em] w-0.5 self-stretch bg-thematicColor opacity-100 md:hidden"></div>
+            <div className="inline-block h-[50px] min-h-[1em] w-0.5 self-stretch bg-thematicColor opacity-100 sm:hidden"></div>
 
             {/* profile tab where username and avatar are displayed */}
             <div
-              className="flex gap-2 justify-between items-center cursor-pointer md:justify-start md:w-full md:p-3 md:border md:border-thematicColor md:rounded-lg"
+              className="flex gap-2 justify-between items-center cursor-pointer sm:justify-start sm:w-full sm:p-3 sm:border sm:border-thematicColor sm:rounded-lg"
               onClick={() => {
                 navigate("/profile");
               }}
@@ -105,11 +123,11 @@ export default function Navbar() {
                 ? auth.currentUser.displayName
                 : userName}
             </div>
-            <div className="inline-block h-[50px] min-h-[1em] w-0.5 self-stretch bg-thematicColor opacity-100 md:hidden "></div>
+            <div className="inline-block h-[50px] min-h-[1em] w-0.5 self-stretch bg-thematicColor opacity-100 sm:hidden "></div>
 
             {/* log out button */}
             <div
-              className="flex gap-2 justify-between items-center cursor-pointer md:justify-start md:w-full md:p-3 md:border md:border-thematicColor md:rounded-lg md:order-1"
+              className="flex gap-2 justify-between items-center cursor-pointer sm:justify-start sm:w-full sm:p-3 sm:border sm:border-thematicColor sm:rounded-lg sm:order-1"
               onClick={() => {
                 signOut(auth)
                   .then(() => {
@@ -138,9 +156,9 @@ export default function Navbar() {
           onClick={() => {
             setNavShow(!navShow);
           }}
-          className="flex justify-center items-center h-full"
+          className="justify-center items-center mobile:h-[60px] hidden sm:flex"
         >
-          <IoApps className="text-4xl text-thematicColor hover:outline hover:outline-[10px] hover:outline-thematicColor/20 hover:rounded" />
+          <IoApps className="text-4xl text-thematicColor hover:outline hover:outline-[10px] hover:outline-thematicColor/20 hover:rounded xs:text-2xl" />
         </button>
       </div>
     </nav>
