@@ -11,7 +11,7 @@ import {
   Colors,
 } from "chart.js";
 import { Line } from "react-chartjs-2";
-import useTheme from "../ThemeSelector/Themehook";
+import useTheme from "../../hooks/Themehook";
 
 ChartJS.register(
   CategoryScale,

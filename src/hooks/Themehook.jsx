@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from "react";
-import { ThemeContext } from "../../contexts/Theme";
+import { ThemeContext } from "../contexts/Theme";
 import {
   lightTheme,
   darkTheme,
@@ -7,7 +7,7 @@ import {
   redTheme,
   goldTheme,
   whiteTheme,
-} from "../../config/themeConfig";
+} from "../config/themeConfig";
 
 export default function useTheme() {
   let { theme } = useContext(ThemeContext);

@@ -1,5 +1,5 @@
 import Navbar from "../Navbar/Navbar";
-import useTheme from "../ThemeSelector/Themehook";
+import useTheme from "../../hooks/Themehook";
 import LineGraph from "./LineGraph";
 import { db } from "../../config/firebaseConfig";
 import { collection, getDocs } from "firebase/firestore";
@@ -92,7 +92,7 @@ export default function Analysis() {
               <td className="whitespace-nowrap px-6 py-4">{data[0][i]}</td>
               <td className="whitespace-nowrap px-6 py-4">{data[1][i]}</td>
               <td className="whitespace-nowrap px-6 py-4">{data[2][i]}</td>
-              <td className="whitespace-nowrap px-6 py-4">{`${data[3][i]}, ${data[4][i]}`}</td>
+              <td className="whitespace-nowrap px-6 py-4">{`${data[4][i]}`}</td>
             </tr>
           );
         }
@@ -186,36 +186,19 @@ async function getData(uid, segment) {
     cpmArr.push(docObjArr[i].cpm);
     accArr.push(docObjArr[i].accuracy);
     labelArr.push(getDateAsDDMMYYYY(docObjArr[i].timeStamp));
-    timeArr.push(getTimeAsHHMM(docObjArr[i].timeStamp));
+    timeArr.push(getTimeandDate(docObjArr[i].timeStamp));
   }
 
   return [wpmArr, cpmArr, accArr, labelArr, timeArr];
 }
 
-function getDateAsDDMMYYYY(str) {
-  let tempStr = "";
+function getDateAsDDMMYYYY(dateObj) {
+  let date = dateObj.toDate();
 
-  for (let i = 1; i < str.length; i++) {
-    if (str.charAt(i) == ")") {
-      return tempStr;
-    } else {
-      tempStr += str.charAt(i);
-    }
-  }
+  return `${date.getDate()}/${date.getMonth()}/${date.getFullYear()}`;
 }
 
-function getTimeAsHHMM(str) {
-  let tempStr = "";
-  let tempArr = str.split("+");
-
-  for (let i = 1; i < tempArr[1].length; i++) {
-    if (tempArr[1].charAt(i) == ")") {
-      let temp = tempStr.split("/");
-      return `${temp[0]}:${temp[1]}`;
-    } else {
-      tempStr += tempArr[1].charAt(i);
-    }
-  }
-
-  return `${tempArr[1]}`;
+function getTimeandDate(dateObj) {
+  let date = new Date(dateObj.toDate());
+  return `${date.toDateString()} at ${date.toLocaleTimeString()}`;
 }

@@ -10,15 +10,12 @@ import {
 } from "./src/config/themeConfig";
 
 export default {
-  content: [
-    "./index.html",
-    "./src/**/*.{js,ts,jsx,tsx}",
-    "./node_modules/tw-elements/dist/js/**/*.js",
-  ],
+  content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
     screens: {
-      md: { max: "1200px" },
-      sm: { max: "770px" },
+      md: { max: "1250px" },
+      sm: { max: "912px" },
+      mobile: { max: "500px" },
       xs: { max: "300px" },
       tall: { raw: "(max-height: 610px)" },
     },
@@ -27,7 +24,7 @@ export default {
         typing: "type-animation 1s steps(10, end)",
         "cursor-blink": "cursor-blink 0.75s step-end infinite",
         rainbow: "rainbow-animation 4s steps(15,end) infinite",
-        "fade-out": "fade-out-animation 0.5s ease",
+        "fade-out": "fade-out-animation 0.2s ease",
         "fade-in": "fade-in-animation 0.2s ease",
       },
       keyframes: {
@@ -94,5 +91,4 @@ export default {
       },
     }),
   ],
-  darkMode: "class",
 };

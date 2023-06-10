@@ -239,7 +239,7 @@ export default function WordModePage({ setTestMode }) {
           ? Math.round((correctWordCount / selectedWordSlot) * 100)
           : 0
       }`,
-      timeStamp: getTimeStamp(),
+      timeStamp: new Date(),
     })
       .then(() => {
         setLoading(false);
@@ -445,12 +445,4 @@ export default function WordModePage({ setTestMode }) {
       {loading && <LoadingPage />}
     </div>
   );
-}
-
-function getTimeStamp() {
-  let date = new Date();
-
-  let timeStampStr = `(${date.getDate()}/${date.getMonth()}/${date.getFullYear()})+(${date.getHours()}/${date.getMinutes()})`;
-
-  return timeStampStr;
 }

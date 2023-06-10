@@ -229,7 +229,7 @@ export default function TimeModePage({ setTestMode }) {
           ? Math.round((correctWordCount / wordIndex) * 100)
           : 0
       }`,
-      timeStamp: getTimeStamp(),
+      timeStamp: new Date(),
     })
       .then(() => {
         setLoading(false);
@@ -434,12 +434,4 @@ export default function TimeModePage({ setTestMode }) {
       {loading && <LoadingPage />}
     </div>
   );
-}
-
-function getTimeStamp() {
-  let date = new Date();
-
-  let timeStampStr = `(${date.getDate()}/${date.getMonth()}/${date.getFullYear()})+(${date.getHours()}/${date.getMinutes()})`;
-
-  return timeStampStr;
 }
