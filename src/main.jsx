@@ -14,13 +14,6 @@ import {
 } from "react-router-dom";
 
 // importing components for the Router
-// import App from "../App.jsx";
-// import ErrorPage from "../components/ErrorPage/ErrorPage.jsx";
-// import HomePage from "../components/HomePage/HomePage.jsx";
-// import TypingTestPage from "../components/TypingTestPage/TypingTestPage";
-// import Profile from "../components/Profile/Profile";
-// import Analysis from "../components/Analysis/Analysis";
-// import Feedback from "../components/FeedBackPage/FeedbackPage";
 import App from "./App";
 import ErrorPage from "./components/ErrorPage/ErrorPage";
 import HomePage from "./components/HomePage/HomePage";
