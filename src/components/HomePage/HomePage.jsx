@@ -75,7 +75,9 @@ export default function HomePage() {
 
         <footer className="flex justify-between md:absolute md:bottom-4 md:left-0 md:w-full md:pl-8 md:pr-8  xs:gap-4 xs:items-center xs:justify-between">
           {/* Themeselector component */}
-          <ThemeSelector />
+          <div className="shadow-md flex-[0.5] rounded-md">
+            <ThemeSelector />
+          </div>
 
           {/* github repo link */}
           <div className="text-4xl">

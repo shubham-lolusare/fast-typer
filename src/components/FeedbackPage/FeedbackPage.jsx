@@ -1,24 +1,48 @@
+/**
+ * THis component is used toprovide feedback by the user
+ * User can post the comments and rating
+ * All the data will be stored in firebase in seperate collection
+ *
+ */
 import { useEffect, useState } from "react";
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+
+// importing components
 import Navbar from "../Navbar/Navbar";
 import Loading from "../LoadingPage/LoadingPage";
+import ThemeSelector from "../ThemeSelector/ThemeSelector";
+
+// inporting toast
+import { toast } from "react-toastify";
+
+// importing icons
 import { AiFillStar, AiOutlineStar } from "react-icons/ai";
+import { FaUserCircle } from "react-icons/fa";
+
+// importing react-router hook
+import { useNavigate } from "react-router-dom";
+
+// importing firebase related modules
 import { db, auth } from "../../config/firebaseConfig";
 import { collection, addDoc, getDocs } from "firebase/firestore";
 import { onAuthStateChanged } from "firebase/auth";
-import { FaUserCircle } from "react-icons/fa";
-import { useNavigate } from "react-router-dom";
 
 export default function Feedback() {
+  // state for storing inputs
   let [feedback, setFeedback] = useState("");
   let [rating, setRating] = useState(1);
   let [userName, setUserName] = useState();
   let [email, setEmail] = useState();
-  let [loading, setLoading] = useState(false);
   let [profileUrl, setProfileUrl] = useState(null);
+
+  // state for manipulating display of loading page
+  let [loading, setLoading] = useState(false);
+
+  // state for storing the array of feedback post fetched from firebase
   let [feedbackPostArr, setFeedbackPostArr] = useState([]);
+
+  // State for showing or hiding feedback posts
   let [showFeedbackPost, setShowFeedbackPost] = useState(false);
+
   let navigate = useNavigate();
 
   useEffect(() => {
@@ -33,6 +57,7 @@ export default function Feedback() {
     });
   });
 
+  // this function handle the feedback input and posting of feedback to firestore
   function handlePostFeedback(e) {
     e.preventDefault();
     setLoading(true);
@@ -62,6 +87,7 @@ export default function Feedback() {
             theme: "colored",
           });
         })
+        // add doc catch block
         .catch((error) => {
           setFeedback("");
           setRating(1);
@@ -92,6 +118,7 @@ export default function Feedback() {
     }
   }
 
+  // this function will handle the fetching of the feedback posts from firestore
   function handleGetFeedback() {
     setShowFeedbackPost(true);
     setLoading(true);
@@ -105,6 +132,7 @@ export default function Feedback() {
                 key={index + 1}
                 className="w-full border border-thematicColor p-4 rounded-2xl shadow-md flex flex-col gap-4"
               >
+                {/* profile pic and email */}
                 <div className="flex justify-between items-center">
                   <div className="flex items-center gap-2">
                     <div className="w-[40px] h-[40px] rounded-full shadow-md flex justify-center items-center text-4xl text-bgColor bg-thematicColor">
@@ -122,12 +150,24 @@ export default function Feedback() {
                       {dataObj.username}
                     </div>
                   </div>
-                  <div className="text-base font-semibold">{dataObj.email}</div>
+                  <div className="text-base font-semibold mobile:hidden">
+                    {dataObj.email}
+                  </div>
                 </div>
-                <div className="text-xl text-textColor">{dataObj.text}</div>
-                <div className="flex justify-between">
-                  <div className="flex">{getStars(dataObj.rating)}</div>
-                  <div>{getPostDateAndTime(dataObj.timeStamp)}</div>
+
+                {/* comment */}
+                <div className="text-xl text-textColor w-full xs:text-base">
+                  {dataObj.text}
+                </div>
+
+                {/* stars and time stamp */}
+                <div className="flex justify-between mobile:flex-col mobile:gap-2">
+                  <div className="flex xs:text-sm">
+                    {getStars(dataObj.rating)}
+                  </div>
+                  <div className="text:[11px] xs:text-[9px]">
+                    {getPostDateAndTime(dataObj.timeStamp)}
+                  </div>
                 </div>
               </article>
             );
@@ -151,16 +191,15 @@ export default function Feedback() {
 
   return (
     <main className="bg-bgColor w-full h-screen flex flex-col transition-all duration-500 ease-in-out animate-fade-in">
-      <ToastContainer />
       <Navbar />
-      <section className="w-full flex flex-col items-center p-4 tracking-wider gap-4">
-        <section className="w-[80%] flex flex-col items-center gap-6">
+      <section className="w-full flex flex-col items-center p-4 tracking-wider gap-4 pb-16">
+        <section className="w-[80%] flex flex-col items-center gap-6 mobile:w-full">
           <h1 className="text-3xl text-textColor font-bold">Feedback Portal</h1>
           <form
             className="w-full p-4 flex flex-col gap-4 shadow-lg rounded-2xl"
             onSubmit={handlePostFeedback}
           >
-            <h1 className="text-2xl font-semibold text-textColor">
+            <h1 className="text-2xl font-semibold text-textColor xs:text-lg">
               Post your feedback here
             </h1>
 
@@ -176,7 +215,7 @@ export default function Feedback() {
             ></textarea>
 
             <div className="flex text-xl font-semibold text-textColor items-center gap-2">
-              <div>Rating:</div>
+              <div className="xs:text-base">Rating:</div>
               <div className="flex">
                 {rating >= 1 ? (
                   <AiFillStar
@@ -259,13 +298,13 @@ export default function Feedback() {
             <input
               type="submit"
               value="Post"
-              className="self-start p-2 pl-12 pr-12 bg-thematicColor/80 rounded-lg text-textColor text-lg font-semibold hover:bg-thematicColor cursor-pointer"
+              className="self-start p-2 pl-12 pr-12 bg-thematicColor/80 rounded-lg text-textColor text-lg font-semibold hover:bg-thematicColor cursor-pointer xs:pl-6 xs:pr-6"
             />
           </form>
         </section>
 
-        <section className="w-[80%] flex flex-col items-center gap-6 shadow-lg rounded-2xl p-4 pt-8">
-          <h1 className="text-2xl font-semibold text-textColor self-start">
+        <section className="w-[80%] flex flex-col items-center gap-6 shadow-lg rounded-2xl p-4 pt-8 mobile:w-full">
+          <h1 className="text-2xl font-semibold text-textColor self-start xs:text-xl">
             Feedback posted by our users
           </h1>
 
@@ -283,6 +322,9 @@ export default function Feedback() {
             </section>
           )}
         </section>
+        <footer className="fixed bottom-0 rounded-t-xl p-2 bg-thematicColor text-textColor shadow-lg flex justify-center items-center gap-2">
+          <ThemeSelector />
+        </footer>
       </section>
       {loading && <Loading />}
     </main>

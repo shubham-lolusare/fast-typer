@@ -1,0 +1,8 @@
+#tableBox {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+#tableBox::-webkit-scrollbar {
+  display: none;
+}

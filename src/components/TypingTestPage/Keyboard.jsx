@@ -4,7 +4,7 @@ import Key from "./Key";
 
 export default function Keyboard({ keypress }) {
   return (
-    <div className="w-ma8border-[1px] border-thematicColor p-4 rounded-2xl shadow-lg flex flex-col gap-2 justify-evenly items-center">
+    <div className="border-[1px] border-thematicColor p-4 rounded-2xl shadow-lg flex flex-col gap-2 justify-evenly items-center tall:hidden mobile:hidden">
       <div className="flex gap-4">
         <Key value="Q" key="81" keycode="81" keypress={keypress} />
         <Key value="W" key="87" keycode="87" keypress={keypress} />

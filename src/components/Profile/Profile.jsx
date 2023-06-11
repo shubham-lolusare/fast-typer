@@ -1,30 +1,58 @@
+/**
+ * This component shows the user profile details
+ * From here the user is able to select the profile picture, update user name , reset password and
+ * even delete the account
+ */
+import { useEffect, useState } from "react";
+import "./Profile.css";
+
+// importing components
 import Navbar from "../Navbar/Navbar";
+import LoadingPage from "../LoadingPage/LoadingPage";
+import SetUserNameModal from "./SetUserNameModal";
+import DeleteAccModal from "./DeleteAccModal";
+import FooterTabs from "../FooterTabs/FooterTabs";
+
+// importing toast
+import { toast } from "react-toastify";
+
+// importing react-router hook
+import { useNavigate } from "react-router-dom";
+
+// importing icons
+import { FaUserAlt } from "react-icons/fa";
+
+// importing firbase related modules
 import { auth, storage } from "../../config/firebaseConfig";
 import {
   onAuthStateChanged,
   sendPasswordResetEmail,
   updateProfile,
 } from "firebase/auth";
-import { useNavigate } from "react-router-dom";
-import { useEffect, useState } from "react";
-import { FaUserAlt } from "react-icons/fa";
-import "./Profile.css";
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-import LoadingPage from "../LoadingPage/LoadingPage";
-import SetUserNameModal from "./SetUserNameModal";
 import { uploadBytes, ref, getDownloadURL } from "firebase/storage";
-import DeleteAccModal from "./DeleteAccModal";
 
 export default function Profile() {
   let navigate = useNavigate();
+
+  // state to save the user details: username, email, date of joining
   let [username, setUsername] = useState("");
   let [email, setEmail] = useState("");
   let [doj, setDoj] = useState("");
   let [img, setImg] = useState("");
+
+  /* state for setting the display of loading page. The loading page will 
+  be shown when the network fethching request are done. 
+  By default it is set true becoz we want the loading page to be shown first till the 
+  user data is fetched*/
   let [loading, setLoading] = useState(true);
+
+  // state for modal to set userr name
   let [userNameModal, setUserNameModal] = useState(false);
+
+  // state for modal to delete account
   let [deleteAccModal, setDeleteAccModal] = useState(false);
+
+  // state for storing the profile image and uid for which userr to change
   let [imageFile, setImageFile] = useState(null);
   let [uid, setUid] = useState();
 
@@ -43,6 +71,7 @@ export default function Profile() {
     });
   }, [navigate, username, email, doj, img]);
 
+  // This function handles the reset password functionality
   function handleResetPassword() {
     setLoading(true);
     sendPasswordResetEmail(auth, email)
@@ -62,14 +91,17 @@ export default function Profile() {
       });
   }
 
+  // this function show the username change modal. User name change is done in SetUserName modal
   function handleSetUserName() {
     setUserNameModal(true);
   }
 
+  // this function show the delete account modal. Delete account is done in DeleteAccount modal
   function handleDeleteAccount() {
     setDeleteAccModal(true);
   }
 
+  // this function handles the change of user profile picture
   function handleUpdateProfilePic() {
     setLoading(true);
 
@@ -97,6 +129,7 @@ export default function Profile() {
                   });
                   setImageFile(null);
                 })
+                // catch block for update profile
                 .catch((error) => {
                   setLoading(false);
                   toast.error(error.message, {
@@ -111,6 +144,7 @@ export default function Profile() {
                   });
                 });
             })
+            // catch block for getDownloadurl function
             .catch((error) => {
               setLoading(false);
               toast.error(error.message, {
@@ -125,6 +159,7 @@ export default function Profile() {
               });
             });
         })
+        // catch block for uploadBytes function
         .catch((error) => {
           setLoading(false);
           toast.error(error.message, {
@@ -154,32 +189,53 @@ export default function Profile() {
   }
 
   return (
-    <div className="w-full h-screen flex flex-col animate-fade-in tracking-wider transition-all duration-500 ease-in-out">
-      <ToastContainer />
+    <main className="w-full h-screen flex flex-col animate-fade-in tracking-wider transition-all duration-500 ease-in-out mobile:h-max">
       <Navbar />
-      <div className="bg-bgColor flex-1 flex justify-center p-4 text-base">
-        <div className="flex w-[40%] flex-col justify-between gap-4 items-center rounded-3xl shadow-lg p-4">
-          <h1 className="text-4xl font-bold text-textColor">
+
+      <section className="bg-bgColor h-full flex justify-center items-center p-4 text-base tall:items-start tall:pb-16">
+        <section className="border border-thematicColor flex w-[60%] flex-col gap-4 items-center rounded-xl shadow-lg p-4 md:w-[80%] sm:w-full xs:gap-2">
+          <header className="text-4xl font-bold text-textColor mobile:text-3xl xs:text-xl">
             Your Profile Details
-          </h1>
-          <div className="w-full flex flex-col gap-4 justify-center items-center">
-            <div className="flex w-[250px] h-[200px] justify-center items-center ">
-              {img != null ? (
-                <img
-                  src={
-                    auth.currentUser != null ? auth.currentUser.photoURL : img
-                  }
-                  alt="Profile image"
-                  className="object-contain w-full h-full border-l-[20px] border-r-[20px] border-thematicColor imageBorder"
-                />
-              ) : (
-                <FaUserAlt className="text-[200px]" />
-              )}
+          </header>
+
+          {/* profile picture */}
+          <article className="w-full flex flex-col gap-4 justify-center items-center">
+            {/* Profile pic with details */}
+            <div className="w-full flex gap-8 tall:gap-0 mobile:flex-col mobile:gap-2">
+              <div className="basis-[250px] flex-shrink-0 flex w-[250px] h-[200px] justify-center items-center mobile:w-full">
+                {img != null ? (
+                  <img
+                    src={
+                      auth.currentUser != null ? auth.currentUser.photoURL : img
+                    }
+                    alt="Profile image"
+                    className="object-contain w-full h-full border-l-[20px] border-r-[20px] border-thematicColor imageBorder"
+                  />
+                ) : (
+                  <FaUserAlt className="text-[200px]" />
+                )}
+              </div>
+
+              {/* user details */}
+              <article className="p-4 flex-1 flex flex-col justify-center w-full text-textColor gap-4 mobile:p-2 mobile:items-center xs:gap-2">
+                <div className="text-5xl font-bold text-thematicColor mobile:text-4xl xs:text-2xl">
+                  {auth.currentUser != null
+                    ? auth.currentUser.displayName
+                    : username}
+                </div>
+
+                <div className="text-xl xs:text-base">
+                  {auth.currentUser != null ? auth.currentUser.email : email}
+                </div>
+                <div className="text-sm xs:text-[10px]">DOJ: {doj}</div>
+              </article>
             </div>
-            <div className="flex gap-4 justify-between items-center">
-              <div>
+
+            {/* profile pic changeing div */}
+            <div className="w-full flex-1 flex items-center gap-2 mobile:flex-col mobile:gap-4 xs:gap-2">
+              <div className="flex-[0.6] mobile:w-full">
                 <input
-                  className="flex-1 relative m-0 block w-full rounded border border-solid border-textColor bg-clip-padding px-3 py-[0.32rem] text-base font-normal text-textColor transition duration-300 ease-in-out file:-mx-3 file:-my-[0.32rem] file:overflow-hidden file:rounded-none file:border-0 file:border-solid file:border-inherit file:bg-thematicColor/90 file:px-3 file:py-[0.32rem] file:cursor-pointer file:text-textColor file:transition file:duration-150 file:ease-in-out file:[border-inline-end-width:1px] file:[margin-inline-end:0.75rem] hover:file:bg-thematicColor focus:border-primary focus:text-textColor focus:shadow-te-primary focus:outline focus:outline-2 focus:outline-thematicColor"
+                  className="w-full p-1 rounded-md file:bg-thematicColor file:outline-0 border border-thematicColor text-textColor file:text-textColor shadow-md file:cursor-pointer cursor-pointer xs:text-sm"
                   type="file"
                   accept="image/*"
                   onChange={(e) => {
@@ -191,63 +247,51 @@ export default function Profile() {
               </div>
               <button
                 onClick={handleUpdateProfilePic}
-                className="flex-1 p-2 pl-6 pr-6 rounded-lg shadow-md bg-thematicColor cursor-pointer"
+                className="text-textColor h-full flex-[0.4] shadow-md rounded-md p-2 bg-thematicColor/90 cursor-pointer hover:bg-thematicColor mobile:w-full xs:text-sm"
               >
                 Update profile photo
               </button>
             </div>
-          </div>
+          </article>
 
-          <div className="w-full grid grid-cols-[max-content_minmax(0px,_1fr)] gap-2 place-content-evenly text-textColor">
-            <div className="border-textColor border p-3 rounded-lg font-semibold">
-              Username{" "}
-            </div>
-            <div className="border-textColor border p-3 rounded-lg">
-              {auth.currentUser != null
-                ? auth.currentUser.displayName
-                : username}
-            </div>
-            <div className="border-textColor border p-3 rounded-lg font-semibold">
-              Email Address
-            </div>
-            <div className="border-textColor border p-3 rounded-lg">
-              {auth.currentUser != null ? auth.currentUser.email : email}
-            </div>
-            <div className="border-textColor border p-3 rounded-lg font-semibold">
-              Day you joined us
-            </div>
-            <div className="border-textColor border p-3 rounded-lg">{doj}</div>
-          </div>
-
-          <div className="flex w-full gap-4 justify-between items-center text-textColor">
+          {/* functional buttons */}
+          <article className="flex w-full gap-2 justify-between items-center text-textColor md:justify-center xs:flex-col xs:text-sm">
             <button
               onClick={handleResetPassword}
-              className="p-2 pl-6 pr-6 rounded-xl shadow-md bg-thematicColor cursor-pointer"
+              className="flex-1 p-2 rounded-md shadow-md bg-thematicColor/90 cursor-pointer hover:bg-thematicColor xs:w-full"
             >
               Reset Password
             </button>
             <button
               onClick={handleSetUserName}
-              className="p-2 pl-6 pr-6 rounded-xl shadow-md bg-thematicColor cursor-pointer"
+              className="flex-1 p-2 rounded-md shadow-md bg-thematicColor/90 cursor-pointer hover:bg-thematicColor xs:w-full"
             >
               Change Username
             </button>
             <button
               onClick={handleDeleteAccount}
-              className="p-2 pl-6 pr-6 rounded-xl shadow-md bg-thematicColor cursor-pointer"
+              className="flex-1 p-2 rounded-md shadow-md bg-thematicColor/90 cursor-pointer hover:bg-thematicColor xs:w-full"
             >
               Delete your account
             </button>
-          </div>
-        </div>
-      </div>
+          </article>
+        </section>
+
+        {/* footer tabs */}
+        <footer className="fixed bottom-0 rounded-t-xl p-2 bg-thematicColor text-textColor shadow-lg flex justify-center items-center gap-2">
+          <FooterTabs />
+        </footer>
+      </section>
+
       {loading && <LoadingPage />}
+
       {userNameModal && (
         <SetUserNameModal setUserNameModal={setUserNameModal} />
       )}
+
       {deleteAccModal && (
         <DeleteAccModal setDeleteAccModal={setDeleteAccModal} />
       )}
-    </div>
+    </main>
   );
 }

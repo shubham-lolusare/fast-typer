@@ -17,11 +17,14 @@ export default function ThemeSelector() {
   }, [changeTheme, themeValue]);
 
   return (
-    <div title="Change Theme" className="flex gap-2 items-center">
+    <div
+      title="Change Theme"
+      className="w-full flex gap-2 items-center h-full rounded-md"
+    >
       <select
         onChange={(e) => setThemeValue(e.target.value)}
         value={themeValue}
-        className="w-max text-base p-1 pl-2 pr-2 border border-textColor bg-bgColor text-textColor rounded focus:outline-0"
+        className="min-w-full w-max h-full text-base p-1 pl-2 pr-2 border border-thematicColor bg-bgColor text-textColor rounded-md focus:outline-0"
       >
         <option value="light">Yellow Sunrise</option>
         <option value="dark">Sleek & Modern</option>

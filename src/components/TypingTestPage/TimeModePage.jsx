@@ -20,6 +20,10 @@ import randomWords from "random-words";
 import Keyboard from "./Keyboard";
 import TimeModeResultModal from "./TimeModeResultModal";
 import LoadingPage from "../LoadingPage/LoadingPage";
+import FooterTabs from "../FooterTabs/FooterTabs";
+
+// Importing icons
+import { AiOutlineArrowRight } from "react-icons/ai";
 
 // importing toast
 import { toast } from "react-toastify";
@@ -35,7 +39,6 @@ import { onAuthStateChanged } from "firebase/auth";
 
 export default function TimeModePage({ setTestMode }) {
   // state for storing the random words generated
-
   let [words, setWords] = useState(randomWords({ min: 300, max: 2000 }));
 
   // state for storing the dom reference of input and the typing box resp.
@@ -106,6 +109,9 @@ export default function TimeModePage({ setTestMode }) {
   // this hook is used for the navigation to other routes
   let navigate = useNavigate();
 
+  // state for manipulating the display of drawer
+  let [drawerShow, setDrawerShow] = useState(true);
+
   /* So according to the above discussed algorithm we will be requiring the dom references
   for the word. DOM references are note requied for individual characters as we can easily access them using the
   word DOM references.
@@ -147,7 +153,7 @@ export default function TimeModePage({ setTestMode }) {
 
   /*This function is entirely responsible for the function of the type box we see
 
-  So the idea is, we have created on input box and hide it.
+  So the idea is, we have created an input box and hide it.
   So whenever the user click on the typing box of the ui, the hidden input box will get focussed and user will be
   able to enter the characters but not see them
 
@@ -155,28 +161,56 @@ export default function TimeModePage({ setTestMode }) {
   as the user types.
 
   On each change of the hidden input box, this handle type function will be invoked and using the DOM references of the 
-  typing box words we will be ble to manipulate the DOM
+  typing box words we able to manipulate the DOM
    */
   function handleType(e) {
+    /* This function will only be called if the users enters all alphabets, spacebar or backspace
+       For all other key presses it will not be called
+       */
     if (
       (e.keyCode >= 65 && e.keyCode <= 90) ||
       e.keyCode == 32 ||
       e.keyCode == 8
     ) {
+      /* This state change is to show the keyboard effect on screen. It stores the key pressed and then it is transferred to the
+      keyboard component as prop*/
       setKeyPress(e.keyCode);
+
       let charNodes = wordRefArr[wordIndex].current.childNodes;
 
+      /**These are the following key points that are considered while manipulating the DOM
+       * 1. User should see the current position of the cursor in typing bmobile:flex-1. For valid characters, green color character should be displayed and for the invalid characters
+       *    new DOM Element (div) should be inserted in between
+       * 3. User should be able to do backspace, if the character entered in invalid
+       * 4. For navigating from one word to another, space key should be used and it will only gets activated if and
+       *    only if the user types atleast one valid or invalid character
+       */
+
+      /**
+       * This condition defines the working of space bar. This if block will only run
+       * if the user pressess the space key and the number of characters types represented by
+       * charIndex state is atleast one
+       * This block is where it is decided if the typed word is correct or not.
+       */
       if (e.keyCode == 32 && charIndex >= 1) {
+        /**
+         * This block of code, specifies the change of cursor from the previous word last
+         * character to next word first character
+         */
         if (charIndex >= charNodes.length) {
           charNodes[charIndex - 1].classList.remove("currentCursorRight");
         } else {
           charNodes[charIndex].classList.remove("currentCursor");
         }
-
         wordRefArr[wordIndex + 1].current.childNodes[0].classList.add(
           "currentCursor"
         );
 
+        /**
+         * This function will keep the track of the words that the user is typing by accessing
+         * them using the DOM references. It will be used to compared to the original array of word and tell if
+         * the typed word is correct or not
+         */
         let word = () => {
           let temp = [];
           for (let i = 0; i < charIndex; i++) {
@@ -184,7 +218,6 @@ export default function TimeModePage({ setTestMode }) {
           }
           return temp.join("");
         };
-
         setCorrectWordCount(() => {
           if (word() == words[wordIndex]) {
             setCorrectCharCount(correctCharCount + word().length);
@@ -192,13 +225,37 @@ export default function TimeModePage({ setTestMode }) {
           } else return correctWordCount;
         });
 
+        //State is changes from previous word to next word
         setWordIndex(wordIndex + 1);
+
+        // state is changed from previois word last character to next word first character
         setCharIndex(0);
+
+        // this function centers the next word we are typing every time we press spacebar
         centerWord();
+
+        // Since no other functionality is required after this we are returning from here
         return;
       }
 
+      /**
+       * This if block handles the backspace functionality
+       * While handling backspace these points are considered
+       * There are two cases:
+       *
+       * Case I: Deleting the extra invalid characters that are inserted.
+       * We will be usning the class extra to identify the extra characters.
+       * In this case there ar three scenarios
+       * 1. Deleting extra characters from the end of the word
+       * 2. Deleting extra characters from in between the word
+       * 3. Deleting extra charcters from the start of the word
+       *
+       * Case II: Deleting the valid characters
+       * This case is for the user who types one incorrect and correct character
+       * consecutively. So to access the incorect character we have to delete the correct one first.
+       */
       if (e.keyCode == 8) {
+        // Case I handled by this if block
         if (
           charIndex != 0 &&
           charNodes[charIndex - 1].classList.contains("extra")
@@ -218,7 +275,9 @@ export default function TimeModePage({ setTestMode }) {
             charNodes[charIndex].remove();
             charNodes[charIndex].classList.add("currentCursor");
           }
-        } else {
+        }
+        // Case II handled by this else block
+        else {
           if (charIndex != 0) {
             charNodes[charIndex - 1].classList.remove("text-green-400");
             if (
@@ -237,9 +296,19 @@ export default function TimeModePage({ setTestMode }) {
         return;
       }
 
+      /**
+       * This if block handles if the user types letters that are shown in typing box
+       * As discussed for correct characte we ar showing them in green and for incorrect characters
+       * we are inserting the DOM elements and showing them in red
+       */
       if (e.keyCode >= 65 && e.keyCode <= 90) {
+        // This if block ensures to start the count down as soon as the user starts typing the characters
         if (testState === "") setTestState("start");
 
+        /**
+         * This if block handles the insertion of the invalid extra character typed
+         * at the end of the words.
+         */
         if (charIndex == charNodes.length) {
           typingBox.current.scrollBy(40, 0);
           charNodes[charIndex - 1].classList.remove("currentCursorRight");
@@ -255,6 +324,11 @@ export default function TimeModePage({ setTestMode }) {
           return;
         }
 
+        /**
+         * This if else block will handle the case for the insertion of the  invalid characters in between words
+         * If the user types corect character of the word it will be shown green
+         * else new extra red colored DOM elements are inserted in between
+         */
         if (e.key === charNodes[charIndex].innerText) {
           charNodes[charIndex].classList.add("text-green-400");
         } else {
@@ -277,6 +351,12 @@ export default function TimeModePage({ setTestMode }) {
           return;
         }
 
+        /**
+         * If the character typed is the last character of the word then this if else block will run
+         * The cursor is generally displayed on the left side of the character to give the asthetic feel
+         * This if else block will ensure that when the last character is typed the cursor should move
+         * to the right side of the character
+         */
         if (charIndex + 1 == charNodes.length) {
           charNodes[charIndex].classList.add("currentCursorRight");
           charNodes[charIndex].classList.remove("currentCursor");
@@ -284,16 +364,22 @@ export default function TimeModePage({ setTestMode }) {
           charNodes[charIndex + 1].classList.add("currentCursor");
         }
 
+        /**
+         * This if else block handle the smooth functioning of the cursor diaplay using the classes
+         * It will ensure to move the cursor to the current character
+         */
         if (charIndex != 0) {
           charNodes[charIndex - 1].classList.remove("currentCursor");
           charNodes[charIndex].classList.remove("currentCursor");
         } else charNodes[charIndex].classList.remove("currentCursor");
 
+        // This shate will increment the character index as it is typed
         setCharIndex(charIndex + 1);
       }
     }
   }
 
+  // This function is used to center the word to be typed
   function centerWord() {
     wordRefArr[wordIndex + 1].current.scrollIntoView({
       block: "center",
@@ -301,6 +387,11 @@ export default function TimeModePage({ setTestMode }) {
     });
   }
 
+  /**
+   * When the user click the typing box the hidden input box should get focused and the cursor shoul be
+   * displayed in the typing box
+   * THis function will ensure this functionality
+   */
   function handleTypeBoxClick() {
     inputRef.current.focus();
     wordRefArr[wordIndex].current.childNodes[charIndex].classList.add(
@@ -308,6 +399,11 @@ export default function TimeModePage({ setTestMode }) {
     );
   }
 
+  /**
+   * This function is used for the fucntioning of the timer.
+   * When the test is over or timer sets to zero results will be posted to fire base
+   * and result modal is displayed
+   */
   function start() {
     if (count != 0) {
       setTimeout(() => {
@@ -320,6 +416,9 @@ export default function TimeModePage({ setTestMode }) {
     }
   }
 
+  /**
+   * This function ensured the smooth posting of the results and after posting the results only the result modal is shown
+   */
   function postResults() {
     addDoc(collection(db, uid, `${userEmailName}-result`, "result"), {
       wpm: Math.round(correctWordCount / (selectedTime / 60)),
@@ -357,14 +456,20 @@ export default function TimeModePage({ setTestMode }) {
       });
   }
 
+  // When the user starts typing this condition beocmes true and timer will function
   if (testState === "start") start();
 
   useEffect(() => {
+    // On each page render this will ensure the centering of the first word in typing box
     typingBox.current.childNodes[0].scrollIntoView({
       block: "center",
       inline: "center",
     });
 
+    /**
+     * If there is no user present this function will ensure to navigate to the login page and if the usr exists it
+     * will fetch its uid and set the segment name for posting the results to firebase
+     */
     onAuthStateChanged(auth, (user) => {
       if (user) {
         setUid(user.uid);
@@ -376,37 +481,81 @@ export default function TimeModePage({ setTestMode }) {
         navigate("/");
       }
     });
+
+    window.addEventListener("resize", () => {
+      if (window.outerWidth > 1250) {
+        setDrawerShow(true);
+      } else {
+        setDrawerShow(false);
+      }
+    });
+
+    window.addEventListener("load", () => {
+      if (window.outerWidth > 1250) {
+        setDrawerShow(true);
+      } else {
+        setDrawerShow(false);
+      }
+    });
   }, [words]);
 
   return (
-    <div className="p-4 text-textColor text-xl leading-normal tracking-wider flex flex-1 flex-col items-center justify-between">
+    <main className="p-4 text-textColor text-xl leading-normal tracking-wider flex flex-1 flex-col items-center justify-center gap-3 xs:p-2">
+      {/* hidden input box */}
       <input
         type="text"
         className="absolute top-0 left-0 opacity-0"
         onKeyDown={handleType}
         ref={inputRef}
       />
-      <aside className="fixed top-[100px] left-0 bg-thematicColor p-2 pl-4 pr-4 rounded-e-xl text-[18px] shadow-lg">
-        <span className="animate-rainbow font-bold">Time Mode</span>{" "}
-        <button
-          onClick={() => {
-            setTestMode("none");
-          }}
-          className="cursor-pointer ml-4 p-1 pl-2 pr-2 bg-bgColor text-textColor shadow-md rounded hover:bg-red-600 hover:text-white"
+
+      {/* mode name display aside */}
+      <aside className="fixed top-[110px] left-0 bg-thematicColor p-2 rounded-e-lg text-[18px] shadow-lg flex gap-2 mobile:top-[605px] tall:top-[110px]">
+        {drawerShow && (
+          <div className="flex flex-col gap-2 xs:text-base">
+            <div className="flex justify-center items-center gap-2">
+              <span className="animate-rainbow font-bold rounded shadow-md bg-bgColor p-1 pl-2 pr-2">
+                Time Mode
+              </span>{" "}
+              {/* button to exit the current tyoing mode */}
+              <button
+                onClick={() => {
+                  setTestMode("none");
+                }}
+                className="cursor-pointer p-1 pl-2 pr-2 bg-bgColor text-textColor shadow-md rounded hover:bg-red-600 hover:text-white"
+              >
+                Exit
+              </button>
+            </div>
+            <div className="text-textColor flex flex-col items-start gap-2 w-full">
+              <FooterTabs />
+            </div>
+          </div>
+        )}
+        <div
+          onClick={() => setDrawerShow(!drawerShow)}
+          className="flex justify-center items-center p-2 text-textColor text-2xl cursor-pointer xs:text-base"
         >
-          Exit
-        </button>
+          <AiOutlineArrowRight
+            className={`hover:outline-8 hover:outline hover:outline-textColor/30 rounded-full ${
+              drawerShow && "rotate-180"
+            }`}
+          />
+        </div>
       </aside>
-      <div className="flex justify-between w-[60%] gap-8">
-        <div className="w-[30%] rounded-xl bg-thematicColor text-textColor flex flex-col gap-2 pt-2 justify-between items-center shadow-lg">
+
+      {/* Live results are shown using this part of DOM */}
+      <section className="flex justify-between w-[60%] gap-8 mobile:flex-col mobile:w-full mobile:gap-4 sm:w-[90%]">
+        {/* Timer */}
+        <article className="flex-[0.3] rounded-xl bg-thematicColor text-textColor flex flex-col gap-2 pt-2 justify-between items-center shadow-lg mobile:w-full">
           <div
             id="timer"
-            className="text-8xl flex-1 flex justify-center items-center w-full"
+            className="text-8xl flex-1 flex justify-center items-center w-full xs:text-6xl"
           >
             {count}
           </div>
 
-          <div className="text-sm h-max">
+          <div className="text-sm h-max xs:text-[9px]">
             {testState === "" ? "Test Time in seconds" : "seconds remaining"}
           </div>
 
@@ -415,34 +564,42 @@ export default function TimeModePage({ setTestMode }) {
             value={count}
             max={selectedTime}
           ></progress>
-        </div>
-        <div className="flex gap-8 flex-1 justify-evenly">
-          <div className="w-[30%] rounded-xl bg-thematicColor text-textColor flex flex-col gap-2 justify-center items-center p-2 shadow-lg">
-            <div className="text-8xl text-mono">
+        </article>
+
+        {/* WPM, CPM and accuracy */}
+        <article className="flex gap-8 flex-[0.7] justify-evenly mobile:gap-2">
+          {/* Words per minute count */}
+          <div className="flex-1 rounded-xl bg-thematicColor text-textColor flex flex-col gap-2 justify-center items-center p-2 shadow-lg">
+            <div className="text-8xl text-mono mobile:text-3xl">
               {Math.round(correctWordCount / (selectedTime / 60))}
             </div>
-            <div className="text-sm"> words/min</div>
+            <div className="text-sm xs:text-[9px]"> words/min</div>
           </div>
-          <div className="w-[30%] rounded-xl bg-thematicColor text-textColor flex flex-col gap-2 justify-center items-center p-2 shadow-lg">
-            <div className="text-8xl text-mono">
+
+          {/* characters per minute count */}
+          <div className="flex-1 rounded-xl bg-thematicColor text-textColor flex flex-col gap-2 justify-center items-center p-2 shadow-lg">
+            <div className="text-8xl text-mono mobile:text-3xl">
               {" "}
               {Math.round(correctCharCount / (selectedTime / 60))}
             </div>
-            <div className="text-sm">chars/min</div>
+            <div className="text-sm xs:text-[9px]">chars/min</div>
           </div>
-          <div className="w-[30%] rounded-xl bg-thematicColor text-textColor flex flex-col gap-2 justify-center items-center p-2 shadow-lg">
-            <div className="text-8xl text-mono">
+
+          {/* accuracy count */}
+          <div className="flex-1 rounded-xl bg-thematicColor text-textColor flex flex-col gap-2 justify-center items-center p-2 shadow-lg">
+            <div className="text-8xl text-mono mobile:text-3xl">
               {correctWordCount != 0
                 ? Math.round((correctWordCount / wordIndex) * 100)
                 : 0}
             </div>
-            <div className="text-sm">% accuracy</div>
+            <div className="text-sm xs:text-[9px]">% accuracy</div>
           </div>
-        </div>
-      </div>
+        </article>
+      </section>
 
-      <div
-        className={`flex border border-thematicColor rounded-lg divide-x divide-thematicColor text-base transition-all duration-500 ease-in-out ${
+      {/* Mode selection tabs */}
+      <section
+        className={`w-[30%] flex border border-thematicColor rounded-lg divide-x divide-thematicColor text-base transition-all duration-500 ease-in-out xs:text-sm mobile:w-full ${
           testState !== "" && "invisible animate-fade-out"
         }`}
       >
@@ -451,8 +608,8 @@ export default function TimeModePage({ setTestMode }) {
             setSelectedTime(15);
             setCount(15);
           }}
-          className={`cursor-pointer pl-12 pr-12 p-0 ${
-            selectedTime == 15 && " bg-thematicColor"
+          className={`cursor-pointer flex-1 p-1 ${
+            selectedTime == 15 && "rounded-l-md bg-thematicColor"
           }`}
         >
           15s
@@ -462,7 +619,7 @@ export default function TimeModePage({ setTestMode }) {
             setSelectedTime(30);
             setCount(30);
           }}
-          className={`cursor-pointer pl-12 pr-12 p-0 ${
+          className={`cursor-pointer flex-1 p-1 ${
             selectedTime == 30 && " bg-thematicColor"
           }`}
         >
@@ -473,7 +630,7 @@ export default function TimeModePage({ setTestMode }) {
             setSelectedTime(60);
             setCount(60);
           }}
-          className={`cursor-pointer pl-12 pr-12 p-0 ${
+          className={`cursor-pointer flex-1 ${
             selectedTime == 60 && " bg-thematicColor"
           }`}
         >
@@ -484,20 +641,22 @@ export default function TimeModePage({ setTestMode }) {
             setSelectedTime(300);
             setCount(300);
           }}
-          className={`cursor-pointer pl-12 pr-12 p-0 ${
-            selectedTime == 300 && " bg-thematicColor"
+          className={`cursor-pointer flex-1 p-1 ${
+            selectedTime == 300 && "rounded-r-md bg-thematicColor"
           }`}
         >
           5min
         </button>
-      </div>
+      </section>
 
-      <div className="text-sm text-textColor tracking-widest">
+      {/* Info block */}
+      <div className="text-sm text-textColor tracking-widest mobile:text-center xs:text-[12px]">
         Just select time above, click below and start typing
       </div>
 
+      {/* Typing box */}
       {count == 0 ? (
-        <div className="text-5xl p-16 w-[80%] h-[100px] flex items-center justify-center bg-black/70 text-white rounded-2xl shadow-lg scrollbar">
+        <div className="text-5xl p-16 w-[80%] h-[100px] flex items-center justify-center bg-black/70 text-white rounded-2xl shadow-lg scrollbar sm:w-[90%] mobile:w-full">
           Test Over
         </div>
       ) : (
@@ -505,13 +664,16 @@ export default function TimeModePage({ setTestMode }) {
           onClick={handleTypeBoxClick}
           ref={typingBox}
           id="textbox"
-          className="cursor-text text-5xl p-6 w-[80%] pl-[40%] flex gap-[40px] items-center justify-start  border-[1px] border-thematicColor bg-black/70 text-white overflow-x-scroll rounded-2xl shadow-lg scrollbar"
+          className="cursor-text text-5xl p-6 w-[80%] pl-[40%] flex gap-[40px] items-center justify-start  border-[1px] border-thematicColor bg-black/70 text-white overflow-x-scroll rounded-2xl shadow-lg scrollbar sm:w-[90%] sm:pl-[45%] mobile:w-full mobile:text-4xl mobile:pl-[50%] mobile:h-[100px]"
         >
           {wordData}
         </div>
       )}
 
+      {/* Keyboard displayed on screen */}
       <Keyboard keypress={keypress} />
+
+      {/* Resultmodal for showing results */}
       {showResultModal && (
         <TimeModeResultModal
           correctWordCount={correctWordCount}
@@ -531,7 +693,9 @@ export default function TimeModePage({ setTestMode }) {
           selectedTime={selectedTime}
         />
       )}
+
+      {/* loading page  */}
       {loading && <LoadingPage />}
-    </div>
+    </main>
   );
 }

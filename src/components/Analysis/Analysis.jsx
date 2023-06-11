@@ -1,29 +1,67 @@
+/**
+ * This component is used to show the results in two modes
+ * i. Graph mode
+ * ii. Table mode
+ *
+ * The results are fetched from the firebase every time the user clicks on the
+ * analysis tab
+ */
+
+import { useEffect, useState } from "react";
+import "./Analysis.css";
+
+// importing components
 import Navbar from "../Navbar/Navbar";
-import useTheme from "../../hooks/Themehook";
 import LineGraph from "./LineGraph";
+import LoadingPage from "../LoadingPage/LoadingPage";
+import FooterTabs from "../FooterTabs/FooterTabs";
+
+// importing firebase related modules
 import { db } from "../../config/firebaseConfig";
 import { collection, getDocs } from "firebase/firestore";
 import { auth } from "../../config/firebaseConfig";
 import { onAuthStateChanged } from "firebase/auth";
-import { useEffect, useState } from "react";
+
+// importing react-router hook
 import { useNavigate } from "react-router-dom";
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-import LoadingPage from "../LoadingPage/LoadingPage";
+
+// importing toast
+import { toast } from "react-toastify";
+
+// importing custom hook which gives us the current hook value
+import useTheme from "../../hooks/Themehook";
 
 export default function Analysis() {
+  // theme value from custom hook
   let theme = useTheme();
+
+  // state for storing uid and collection segment to fetch user related data
   let [uid, setUid] = useState();
   let [userEmailName, setUserEmailName] = useState();
-  let [label] = useState([]);
+
   let navigate = useNavigate();
+
+  // state for graph: label and data sets
+  let [label] = useState([]);
   let [dataSet, setDataSet] = useState({
     label,
     datasets: [],
   });
+
+  // state for storing total tests taken
   let [totalTest, setTotalTest] = useState(0);
+
+  // state for storing the table body
   let [tableBody, setTableBody] = useState([]);
+
+  /* state for setting the display of loading page. The loading page will 
+  be shown when the network fethching request are done. 
+  By default it is set true becoz we want the loading page to be shown first till the 
+  test data is fetched*/
   let [loading, setLoading] = useState(true);
+
+  // state for setting the data display modes i.e graph mode or table mode
+  let [displyeMode, setDisplayMode] = useState("graph");
 
   useEffect(() => {
     onAuthStateChanged(auth, (user) => {
@@ -38,6 +76,7 @@ export default function Analysis() {
       }
     });
 
+    // user data is fetched on each render of the page
     getData(uid, `${userEmailName}-result`).then((data) => {
       setLoading(false);
       if (data[0].length == 0) {
@@ -103,64 +142,95 @@ export default function Analysis() {
   }, [navigate, theme.thematicColor, uid, userEmailName]);
 
   return (
-    <div className="bg-bgColor w-full min-h-screen animate-fade-in transition-all duration-500 ease-in-out">
-      <ToastContainer />
+    <main className="bg-bgColor w-full min-h-screen animate-fade-in transition-all duration-500 ease-in-out">
       <Navbar />
-      <div className="flex flex-col justify-center items-center p-4">
-        <div className="flex flex-col justify-center items-center gap-4">
-          <h1 className="text-center font-bold text-5xl text-textColor">
+      <section className="flex flex-col justify-center items-center p-4 pb-16 gap-4 xs:gap-2">
+        {/* heading data */}
+        <header className="flex flex-col justify-center items-center gap-4">
+          <h1 className="text-center font-bold text-5xl text-textColor xs:text-3xl">
             Test Analysis
           </h1>
           <div className="text-sm font-bold text-textColor">
             Total tests taken: {totalTest}
           </div>
-        </div>
+        </header>
 
-        <div className="w-[80%] h-3/5 p-4 rounded-2xl shadow-lg bg-bgColor ">
-          <LineGraph dataSet={dataSet} />
-        </div>
+        {/* mode switching tabs */}
+        <section className="flex items-center w-[30%] border border-thematicColor divide-x-2 divide-thematicColor rounded-lg text-textColor shadow-md md:w-[40%] sm:w-[60%] mobile:w-full xs:text-sm">
+          <button
+            onClick={() => {
+              setDisplayMode("graph");
+            }}
+            className={`flex-1 p-1 ${
+              displyeMode === "graph" && "rounded-l-md bg-thematicColor"
+            }`}
+          >
+            Graph Mode
+          </button>
+          <button
+            onClick={() => {
+              setDisplayMode("table");
+            }}
+            className={`flex-1 p-1 ${
+              displyeMode === "table" && "rounded-r-md bg-thematicColor"
+            }`}
+          >
+            Table Mode
+          </button>
+        </section>
 
-        {totalTest != 0 && (
-          <div className="w-3/5 p-4 rounded-2xl shadow-lg bg-bgColor flex flex-col mt-4">
-            <div className="overflow-x-auto sm:-mx-6 lg:-mx-8">
-              <div className="inline-block min-w-full py-2 sm:px-6 lg:px-8">
-                <div className="overflow-hidden">
-                  <table className="min-w-full text-center text-textColor rounded-2xl">
-                    <caption className="text-xl font-bold mb-4">
-                      Test Data
-                    </caption>
-                    <thead className="border-b font-medium bg-thematicColor">
-                      <tr>
-                        <th scope="col" className="px-6 py-4">
-                          Sr No
-                        </th>
-                        <th scope="col" className="px-6 py-4">
-                          Words Per Min
-                        </th>
-                        <th scope="col" className="px-6 py-4">
-                          Characters Per Min
-                        </th>
-                        <th scope="col" className="px-6 py-4">
-                          Accuracy
-                        </th>
-                        <th scope="col" className="px-6 py-4">
-                          Test Date & Time
-                        </th>
-                      </tr>
-                    </thead>
-                    <tbody>{tableBody}</tbody>
-                  </table>
-                </div>
-              </div>
-            </div>
+        {/* graph component */}
+        {displyeMode === "graph" && (
+          <div className="w-[80%] h-3/5 p-4 border border-thematicColor rounded-2xl shadow-lg bg-bgColor sm:w-full sm:p-1">
+            <LineGraph dataSet={dataSet} />
           </div>
         )}
-      </div>
+
+        {/* table for test data */}
+        {displyeMode === "table" && totalTest != 0 && (
+          <div
+            id="tableBox"
+            className="w-[80%] p-4 border border-thematicColor rounded-2xl shadow-lg bg-bgColor flex flex-col md:w-full overflow-x-scroll md:border-0"
+          >
+            <table className="min-w-max text-center text-textColor rounded-2xl xs:text-sm">
+              <thead className="border-b font-medium bg-thematicColor">
+                <tr>
+                  <th scope="col" className="px-6 py-4">
+                    Sr No
+                  </th>
+                  <th scope="col" className="px-6 py-4">
+                    Words Per Min
+                  </th>
+                  <th scope="col" className="px-6 py-4">
+                    Characters Per Min
+                  </th>
+                  <th scope="col" className="px-6 py-4">
+                    Accuracy
+                  </th>
+                  <th scope="col" className="px-6 py-4">
+                    Test Date & Time
+                  </th>
+                </tr>
+              </thead>
+              <tbody>{tableBody}</tbody>
+            </table>
+          </div>
+        )}
+
+        {/* footer tabs */}
+        <footer className="fixed bottom-0 rounded-t-xl p-2 bg-thematicColor text-textColor shadow-lg flex justify-center items-center gap-2">
+          <FooterTabs />
+        </footer>
+      </section>
+
+      {/* loading page */}
       {loading && <LoadingPage />}
-    </div>
+    </main>
   );
 }
 
+// this function will return the test data in array format of WPM,CPM, Accuracy, Chart labels
+// sorted in ascending order of the test date given
 async function getData(uid, segment) {
   let wpmArr = [];
   let cpmArr = [];
@@ -185,19 +255,14 @@ async function getData(uid, segment) {
     wpmArr.push(docObjArr[i].wpm);
     cpmArr.push(docObjArr[i].cpm);
     accArr.push(docObjArr[i].accuracy);
-    labelArr.push(getDateAsDDMMYYYY(docObjArr[i].timeStamp));
+    labelArr.push(docObjArr[i].timeStamp.toDate().toDateString());
     timeArr.push(getTimeandDate(docObjArr[i].timeStamp));
   }
 
   return [wpmArr, cpmArr, accArr, labelArr, timeArr];
 }
 
-function getDateAsDDMMYYYY(dateObj) {
-  let date = dateObj.toDate();
-
-  return `${date.getDate()}/${date.getMonth()}/${date.getFullYear()}`;
-}
-
+// this function simply returns the formated time and date stamp
 function getTimeandDate(dateObj) {
   let date = new Date(dateObj.toDate());
   return `${date.toDateString()} at ${date.toLocaleTimeString()}`;

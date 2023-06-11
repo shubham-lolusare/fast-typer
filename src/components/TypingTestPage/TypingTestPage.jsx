@@ -80,7 +80,9 @@ export default function TypingTestPage() {
                 </ul>
               </article>
             </section>
-            <FooterTabs />
+            <footer className="fixed bottom-0 rounded-t-xl p-2 bg-thematicColor text-textColor shadow-lg flex justify-center items-center gap-2">
+              <FooterTabs />
+            </footer>
           </section>
         )}
 

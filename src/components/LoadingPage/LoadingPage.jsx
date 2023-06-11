@@ -2,7 +2,7 @@ import loading_pic from "./loading_animation.svg";
 
 export default function Loading() {
   return (
-    <div className="h-screen w-full fixed top-0 left-0 bg-black/90 flex flex-col justify-center items-center">
+    <div className="h-screen w-full fixed top-0 left-0 bg-black/90 flex flex-col justify-center items-center z-[2000]">
       <img
         src={loading_pic}
         alt="Loading Animation Picture"

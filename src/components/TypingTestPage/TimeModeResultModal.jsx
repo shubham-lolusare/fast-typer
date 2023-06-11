@@ -1,5 +1,13 @@
 /* eslint-disable react/prop-types */
+/**
+ * This component will display the result of the user
+ * It will also reset the state of the test
+ */
+
+// importing icon
 import { RxCross1 } from "react-icons/rx";
+
+// importing random words
 import randomWords from "random-words";
 
 export default function TimeModeResultModal({
@@ -17,6 +25,10 @@ export default function TimeModeResultModal({
   setSelectedTime,
   selectedTime,
 }) {
+  /**
+   * This function will reset the test state and varoius other parameters to the iniital state when the
+   * user clicks on the cancel button
+   */
   function handleReset() {
     setCorrectWordCount(0);
     setCorrectCharCount(0);
@@ -30,32 +42,33 @@ export default function TimeModeResultModal({
   }
 
   return (
-    <div className="h-screen w-full absolute top-0 left-0 bg-black/90 flex justify-center items-center">
-      <div className="bg-bgColor relative w-[40%] h-[55%] rounded-xl p-4 text-textColor flex flex-col gap-4 justify-between animate-fade-in">
+    <main className="p-2 h-screen w-screen fixed top-0 left-0 bg-black/90 flex justify-center items-center z-[2000]">
+      <section className="bg-bgColor relative w-[40%] h-max rounded-xl p-4 text-textColor flex flex-col gap-4 justify-between animate-fade-in md:w-[60%] mobile:w-full">
         <RxCross1
           className="absolute right-6 top-8 hover:text-thematicColor cursor-pointer"
           onClick={handleReset}
         />
-        <div className="h-full flex flex-col gap-4">
-          <h1 className="text-textColor text-4xl font-bold">
+        <article className="h-full flex flex-col gap-4 ">
+          <h1 className="text-textColor text-4xl font-bold xs:text-3xl">
             Your Test Result
           </h1>
-          <div className="flex-1 flex flex-col gap-8">
-            <div className="text-4xl">You tried your best!!!</div>
+          <div className="flex-1 flex flex-col gap-8 xs:gap-4">
+            <div className="text-4xl xs:text-xl">You tried your best!!!</div>
 
-            <div className="flex-1 flex gap-4">
+            <div className="flex-1 flex gap-4 sm:flex-col">
               <div className="p-4 bg-thematicColor flex-1 rounded-xl shadow-lg flex flex-col justify-evenly items-center">
-                <div className="text-9xl font-bold">
+                <div className="text-9xl font-bold xs:text-5xl">
                   {Math.round(correctWordCount / (selectedTime / 60))}
                 </div>
-                <div>Words per minute</div>
+                <div className="xs:text-base">Words per minute</div>
               </div>
+
               <div className="p-4 bg-thematicColor flex-1 rounded-xl shadow-lg flex flex-col justify-between items-start">
-                <div className="text-5xl font-bold">
+                <div className="text-5xl font-bold xs:text-3xl">
                   {Math.round(correctCharCount / (selectedTime / 60))} CPM
                 </div>
-                <div className="text-sm">with</div>
-                <div className="text-6xl">
+                <div className="text-sm mobile:text-base">with</div>
+                <div className="text-6xl mobile:text-5xl xs:text-3xl">
                   {correctWordCount != 0
                     ? Math.round((correctWordCount / attemptedWords) * 100)
                     : 0}
@@ -64,8 +77,8 @@ export default function TimeModeResultModal({
               </div>
             </div>
           </div>
-        </div>
-      </div>
-    </div>
+        </article>
+      </section>
+    </main>
   );
 }
