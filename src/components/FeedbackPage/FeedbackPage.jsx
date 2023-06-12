@@ -303,7 +303,7 @@ export default function Feedback() {
           </form>
         </section>
 
-        <section className="w-[80%] flex flex-col items-center gap-6 shadow-lg rounded-2xl p-4 pt-8 mobile:w-full">
+        <section className="w-[80%] flex flex-col items-center gap-6 rounded-2xl pt-8 mobile:w-full">
           <h1 className="text-2xl font-semibold text-textColor self-start xs:text-xl">
             Feedback posted by our users
           </h1>
