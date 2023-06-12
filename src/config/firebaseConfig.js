@@ -30,3 +30,5 @@ export const db = getFirestore(app);
 
 // initializing firebase storage
 export const storage = getStorage(app);
+
+console.log(import.meta.env.VITE_FIREBASE_API_KEY);
