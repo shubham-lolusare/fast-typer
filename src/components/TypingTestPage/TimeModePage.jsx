@@ -504,7 +504,7 @@ export default function TimeModePage({ setTestMode }) {
       {/* hidden input box */}
       <input
         type="text"
-        className="absolute top-0 left-0 opacity-0"
+        className="absolute top-0 left-0 opacity-0 mobile:top-[600px]"
         onKeyDown={handleType}
         ref={inputRef}
       />

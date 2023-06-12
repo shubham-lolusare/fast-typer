@@ -1,3 +1,6 @@
+// this is the file where we will configure the themes
+// we will add here the colors we need
+
 // Yellow sunrise light theme
 export const lightTheme = {
   bgColor: "#fffbeb", //amber-50 color
