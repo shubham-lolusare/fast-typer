@@ -117,7 +117,6 @@ export default function Navbar() {
                         ? auth.currentUser.photoURL
                         : profileUrl
                     }
-                    alt="Profile image"
                     className="object-contain w-full h-full rounded-full bg-thematicColor"
                   />
                 </div>
