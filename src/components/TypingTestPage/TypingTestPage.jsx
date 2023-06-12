@@ -8,7 +8,7 @@
  Both modes are coded in two different components which will be loaded in lazy mode.
  */
 
-import { useState, lazy, Suspense } from "react";
+import { useState, lazy, Suspense, useEffect } from "react";
 
 // importing components
 import Navbar from "../Navbar/Navbar";
@@ -23,14 +23,33 @@ export default function TypingTestPage() {
   // state for selecting the mode of the test
   let [testMode, setTestMode] = useState("none");
 
+  // state for checking if the user is in the mobile mode
+  // If the user is in the mobile mode, then the test canno be taken
+  let [mobileMode, setMobileMode] = useState(false);
+
+  useEffect(() => {
+    window.addEventListener("resize", () => {
+      if (window.outerWidth < 930) {
+        setMobileMode(true);
+      } else {
+        setMobileMode(false);
+      }
+    });
+    if (window.outerWidth < 930) {
+      setMobileMode(true);
+    } else {
+      setMobileMode(false);
+    }
+  }, []);
+
   return (
     <Suspense fallback={<Loading />}>
       {" "}
-      <main className="bg-bgColor w-full h-screen flex flex-col transition-all duration-500 ease-in-out animate-fade-in mobile:h-full sm:pb-[80px]">
+      <main className="bg-bgColor w-full h-screen flex flex-col transition-all duration-500 ease-in-out animate-fade-in mobile:h-screen sm:pb-[80px]">
         <Navbar />
 
         {/* based on the testMode state the components will be displayed  */}
-        {testMode == "none" && (
+        {!mobileMode && testMode == "none" ? (
           <section className="p-4 text-textColor text-xl leading-normal tracking-wider flex flex-1 items-center justify-center">
             <section className="w-[40%] p-4 border border-thematicColor rounded-2xl flex flex-col gap-6 shadow-lg md:w-[80%] mobile:w-full">
               <header className="text-center text-4xl font-bold mobile:text-2xl xs:text-xl">
@@ -80,6 +99,25 @@ export default function TypingTestPage() {
                 </ul>
               </article>
             </section>
+            <footer className="fixed bottom-0 rounded-t-xl p-2 bg-thematicColor text-textColor shadow-lg flex justify-center items-center gap-2">
+              <FooterTabs />
+            </footer>
+          </section>
+        ) : (
+          <section className="w-full h-full p-2 text-textColor text-xl tracking-wider flex items-center justify-center">
+            <div className="w-[90%] h-full flex flex-col justify-center gap-6">
+              <h1 className="text-5xl text-textColor text-center">Oops!</h1>
+              <p className="text-xl leading-normal text-justify xs:text-base">
+                Tests are not allowed in mobile devices. But don&apos;t worry,
+                you can still analyze your results, post comments in feedback
+                portal and tweek your profile{" "}
+                <span className="text-2xl xs:text-xl">&#128526;</span>
+              </p>{" "}
+              <strong className="animate-rainbow xs:text-sm">
+                Note: If your are a tablet user, try changing the orientation of
+                the device.
+              </strong>
+            </div>
             <footer className="fixed bottom-0 rounded-t-xl p-2 bg-thematicColor text-textColor shadow-lg flex justify-center items-center gap-2">
               <FooterTabs />
             </footer>
