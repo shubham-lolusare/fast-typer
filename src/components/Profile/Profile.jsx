@@ -204,7 +204,7 @@ export default function Profile() {
     <main className="w-full h-screen flex flex-col animate-fade-in tracking-wider transition-all duration-500 ease-in-out mobile:h-max">
       <Navbar />
 
-      <section className="bg-bgColor h-full flex justify-center items-center p-4 text-base tall:items-start tall:pb-16">
+      <section className="bg-bgColor h-full flex justify-center items-center p-4 text-base tall:items-start tall:pb-20">
         <section className="border border-thematicColor flex w-[60%] flex-col gap-4 items-center rounded-xl shadow-lg p-4 md:w-[80%] sm:w-full xs:gap-2">
           <header className="text-4xl font-bold text-textColor mobile:text-3xl xs:text-xl">
             Your Profile Details

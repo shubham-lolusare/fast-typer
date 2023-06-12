@@ -1,3 +1,7 @@
+/* This hook is created for the graph styling purposes since we cannont add 
+tailwind classes in graph dataset objects.
+Using this hook we are returning the objects that are created in themeConfig file adding colors dynamically
+ */
 import { useContext, useEffect, useState } from "react";
 import { ThemeContext } from "../contexts/Theme";
 import {

@@ -22,6 +22,7 @@ import Profile from "./components/Profile/Profile";
 import Analysis from "./components/Analysis/Analysis";
 import Feedback from "./components/FeedbackPage/FeedbackPage";
 
+// Since browser router is not supported by git hub we are using the has router
 const router = createHashRouter(
   createRoutesFromElements(
     <Route path="/" element={<App />} errorElement={<ErrorPage />}>
