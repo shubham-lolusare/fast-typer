@@ -193,8 +193,10 @@ export default function Feedback() {
     <main className="bg-bgColor w-full h-screen flex flex-col transition-all duration-500 ease-in-out animate-fade-in">
       <Navbar />
       <section className="w-full flex flex-col items-center p-4 tracking-wider gap-4 pb-16">
-        <section className="w-[80%] flex flex-col items-center gap-6 mobile:w-full">
-          <h1 className="text-3xl text-textColor font-bold">Feedback Portal</h1>
+        <section className="w-[80%] flex flex-col items-center gap-4 mobile:w-full">
+          <h1 className="text-3xl text-textColor font-bold pt-6">
+            Feedback Portal
+          </h1>
           <form
             className="w-full p-4 flex flex-col gap-4 shadow-lg rounded-2xl"
             onSubmit={handlePostFeedback}
