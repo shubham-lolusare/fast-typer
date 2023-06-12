@@ -107,13 +107,13 @@ export default function TypingTestPage() {
           <section className="w-full h-full p-2 text-textColor text-xl tracking-wider flex items-center justify-center">
             <div className="w-[90%] h-full flex flex-col justify-center gap-6">
               <h1 className="text-5xl text-textColor text-center">Oops!</h1>
-              <p className="text-xl leading-normal text-justify xs:text-base">
+              <p className="text-base leading-normal text-justify">
                 Tests are not allowed in mobile devices. But don&apos;t worry,
                 you can still analyze your results, post comments in feedback
                 portal and tweek your profile{" "}
                 <span className="text-2xl xs:text-xl">&#128526;</span>
               </p>{" "}
-              <strong className="animate-rainbow xs:text-sm">
+              <strong className="animate-rainbow text-sm xs:text-sm">
                 Note: If your are a tablet user, try changing the orientation of
                 the device.
               </strong>
