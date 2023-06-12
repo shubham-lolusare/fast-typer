@@ -15,6 +15,13 @@ import Navbar from "../Navbar/Navbar";
 import Loading from "../LoadingPage/LoadingPage";
 import FooterTabs from "../FooterTabs/FooterTabs";
 
+// importing firebase related modules
+import { onAuthStateChanged } from "firebase/auth";
+import { auth } from "../../config/firebaseConfig";
+
+// importing react router hook
+import { useNavigate } from "react-router-dom";
+
 // lazy loading the two modes of the tests
 let TimeModePage = lazy(() => import("./TimeModePage"));
 let WordModePage = lazy(() => import("./WordModePage"));
@@ -27,7 +34,15 @@ export default function TypingTestPage() {
   // If the user is in the mobile mode, then the test canno be taken
   let [mobileMode, setMobileMode] = useState(false);
 
+  let navigate = useNavigate();
+
   useEffect(() => {
+    onAuthStateChanged(auth, (user) => {
+      if (!user) {
+        navigate("/");
+      }
+    });
+
     window.addEventListener("resize", () => {
       if (window.outerWidth < 930) {
         setMobileMode(true);

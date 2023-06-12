@@ -67,11 +67,7 @@ export default function HomePage() {
         </header>
 
         {/* animating image below heading */}
-        <img
-          src={typewriter}
-          alt="The Typewriter floating image"
-          className="flex-1 md:flex-auto"
-        />
+        <img src={typewriter} className="flex-1 md:flex-auto" />
 
         <footer className="flex justify-between md:absolute md:bottom-4 md:left-0 md:w-full md:pl-8 md:pr-8  xs:gap-4 xs:items-center xs:justify-between">
           {/* Themeselector component */}
