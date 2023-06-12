@@ -1,14 +1,27 @@
 /* eslint-disable react/prop-types */
-import { RxCross1, RxGear } from "react-icons/rx";
+
+// this modal will let the user to set the user to set the username for their account
+
 import { useState } from "react";
+
+// importing icons
+import { RxCross1, RxGear } from "react-icons/rx";
+
+// importing firebase related modules
 import { auth } from "../../config/firebaseConfig";
 import { updateProfile } from "firebase/auth";
+
+// importing toast
 import { toast } from "react-toastify";
 
 export default function SetUserNameModal({ setUserNameModal }) {
+  // state for storing the input value
   let [userName, setUserName] = useState("");
+
+  //state for setting the display of spinning gears in modal.
   let [loading, setLoading] = useState(false);
 
+  // user name is changes using this function
   function changeUserName() {
     if (userName != "") {
       setLoading(true);
@@ -31,6 +44,7 @@ export default function SetUserNameModal({ setUserNameModal }) {
             setUserNameModal(false);
           }, 2000);
         })
+        // catch block for update profile function
         .catch((error) => {
           setLoading(false);
           toast.error(error.message, {
@@ -59,16 +73,20 @@ export default function SetUserNameModal({ setUserNameModal }) {
   }
 
   return (
-    <div className="h-screen w-full absolute top-0 left-0 bg-black/90 flex justify-center items-center">
-      <div className="bg-bgColor relative w-[40%] h-[55%] rounded-xl p-4 text-textColor flex flex-col gap-4 justify-between">
+    <main className="p-4 h-screen w-full absolute top-0 left-0 bg-black/90 flex justify-center items-center z-[2000]">
+      <section className="bg-bgColor relative w-[50%] h-[60%] rounded-xl p-4 text-textColor flex flex-col gap-4 justify-between sm:w-[80%] sm:h-[40%] mobile:h-[50%] mobile:w-full">
         <RxCross1
           className="absolute right-4 top-6 text-textColor hover:text-thematicColor cursor-pointer"
           onClick={() => setUserNameModal(false)}
         />
-        <div className="flex flex-col gap-4">
-          <h1 className="text-textColor text-4xl font-bold">
+
+        {/* heading */}
+        <article className="flex flex-col gap-4">
+          <h1 className="text-textColor text-4xl font-bold mobile:text-2xl xs:text-xl">
             Enter new username
           </h1>
+
+          {/* username input */}
           <div className="relative">
             <input
               type="email"
@@ -87,26 +105,27 @@ export default function SetUserNameModal({ setUserNameModal }) {
               New User Name
             </label>
           </div>
-        </div>
-        <div className="flex-1 flex flex-wrap overflow-hidden justify-center items-center text-9xl text-thematicColor">
+        </article>
+
+        {/* Asthetic gear icon which starts spinning once the network request is sent 
+        Its display is managed by loading state */}
+        <article className="flex-1 flex flex-wrap overflow-hidden justify-center items-center text-9xl text-thematicColor xs:text-6xl mobile:text-8xl">
           <RxGear className={loading && "animate-spin"} />
           <RxGear className={loading && "animate-spin"} />
           <RxGear className={loading && "animate-spin"} />
           <RxGear className={loading && "animate-spin"} />
           <RxGear className={loading && "animate-spin"} />
-          <RxGear className={loading && "animate-spin"} />
-          <RxGear className={loading && "animate-spin"} />
-        </div>
+        </article>
 
         <div>
           <button
             onClick={changeUserName}
-            className="w-full p-2 pl-5 pr-5 font-semibold shadow-md text-textColor bg-thematicColor/80 rounded-lg hover:bg-thematicColor/100 "
+            className="w-full p-2 pl-5 pr-5 font-semibold shadow-md text-textColor bg-thematicColor/80 rounded-lg hover:bg-thematicColor/100 xs:text-sm"
           >
             Change User Name
           </button>
         </div>
-      </div>
-    </div>
+      </section>
+    </main>
   );
 }

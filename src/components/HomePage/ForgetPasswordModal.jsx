@@ -66,7 +66,8 @@ export default function ForgetPasswordModal({ show, setShowModal }) {
           className="absolute right-4 top-6 text-textColor hover:text-thematicColor cursor-pointer"
           onClick={() => setShowModal(!show)}
         />
-        <div className="flex flex-col gap-4 ">
+
+        <article className="flex flex-col gap-4 ">
           {/* heading */}
           <h1 className="text-textColor text-3xl font-bold mobile:text-2xl xs:text-xl">
             Reset your password
@@ -96,11 +97,11 @@ export default function ForgetPasswordModal({ show, setShowModal }) {
           <div className=" text-textColor font-bold">
             {status !== "" ? status : ""}
           </div>
-        </div>
+        </article>
 
         {/* Asthetic gear icon which starts spinning once the network request is sent 
         Its display is managed by loading state */}
-        <div className="flex-1 flex flex-wrap overflow-hidden justify-center items-center text-9xl text-thematicColor xs:text-6xl mobile:text-8xl">
+        <article className="flex-1 flex flex-wrap overflow-hidden justify-center items-center text-9xl text-thematicColor xs:text-6xl mobile:text-8xl">
           <RxGear className={loading && "animate-spin"} />
           <RxGear className={loading && "animate-spin"} />
           <RxGear className={loading && "animate-spin"} />
@@ -108,7 +109,7 @@ export default function ForgetPasswordModal({ show, setShowModal }) {
           <RxGear className={loading && "animate-spin"} />
           <RxGear className={loading && "animate-spin"} />
           <RxGear className={loading && "animate-spin"} />
-        </div>
+        </article>
 
         {/* Submit button for the modal */}
         <div>

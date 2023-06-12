@@ -75,7 +75,19 @@ export default function Profile() {
   function handleResetPassword() {
     setLoading(true);
     sendPasswordResetEmail(auth, email)
-      .then(() => {})
+      .then(() => {
+        setLoading(false);
+        toast.success("Reset link sent to you email", {
+          position: "top-right",
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+        });
+      })
       .catch((error) => {
         setLoading(false);
         toast.error(error.message, {

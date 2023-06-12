@@ -5,7 +5,7 @@
 import { useEffect, useState } from "react";
 
 // importing the images
-import typewriter from "./type_animate.svg";
+import typewriter from "./images_svg/type_animate.svg";
 
 // Importing the child components
 import ThemeSelector from "../ThemeSelector/ThemeSelector";

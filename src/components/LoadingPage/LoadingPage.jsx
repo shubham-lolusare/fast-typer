@@ -1,4 +1,4 @@
-import loading_pic from "./loading_animation.svg";
+import loading_pic from "./images_svg/loading_animation.svg";
 
 export default function Loading() {
   return (

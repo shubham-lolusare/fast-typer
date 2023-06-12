@@ -1,7 +1,13 @@
+// this component lets us select the themes
+// It is using the changeTheme function defined in theme context using use context hook
+
 import { useContext, useEffect, useState } from "react";
+
+// importing context
 import { ThemeContext } from "../../contexts/Theme";
 
 export default function ThemeSelector() {
+  // state for storing the theme value either from local storage or context
   let [themeValue, setThemeValue] = useState(
     `${
       localStorage.getItem("fast-typer-theme") != null
@@ -10,6 +16,7 @@ export default function ThemeSelector() {
     }`
   );
 
+  // change theme function from theme contsection
   let { changeTheme } = useContext(ThemeContext);
 
   useEffect(() => {
@@ -17,7 +24,7 @@ export default function ThemeSelector() {
   }, [changeTheme, themeValue]);
 
   return (
-    <div
+    <section
       title="Change Theme"
       className="w-full flex gap-2 items-center h-full rounded-md"
     >
@@ -33,6 +40,6 @@ export default function ThemeSelector() {
         <option value="gold">Golden Era</option>
         <option value="white">Formal Whites</option>
       </select>
-    </div>
+    </section>
   );
 }

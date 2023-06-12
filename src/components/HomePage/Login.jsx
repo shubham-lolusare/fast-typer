@@ -38,7 +38,6 @@ import {
 
 export default function Login() {
   // This state is used to toggle the hide and show of the password in input box using the eye icon
-
   let [passwordState, setPasswordState] = useState("hide");
 
   /* state for setting the display of loading page. The loading page will 

@@ -1,3 +1,4 @@
+/* Disabling the scroll bar visibility for the table shown in analysis page */
 #tableBox {
   -ms-overflow-style: none;
   scrollbar-width: none;
