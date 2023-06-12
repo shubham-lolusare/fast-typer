@@ -11,6 +11,10 @@ import {
   redTheme,
   goldTheme,
   whiteTheme,
+  seaTheme,
+  purpleTheme,
+  darkredTheme,
+  darkpurpleTheme,
 } from "../config/themeConfig";
 
 export default function useTheme() {
@@ -24,6 +28,10 @@ export default function useTheme() {
     else if (theme === "red") setThemeState(redTheme);
     else if (theme === "gold") setThemeState(goldTheme);
     else if (theme === "white") setThemeState(whiteTheme);
+    else if (theme === "sea") setThemeState(seaTheme);
+    else if (theme === "purple") setThemeState(purpleTheme);
+    else if (theme === "darkred") setThemeState(darkredTheme);
+    else if (theme === "darkpurple") setThemeState(darkpurpleTheme);
   }, [theme, themeState]);
 
   return themeState;

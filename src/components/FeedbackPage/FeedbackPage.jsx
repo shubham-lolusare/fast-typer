@@ -130,7 +130,7 @@ export default function Feedback() {
             return (
               <article
                 key={index + 1}
-                className="w-full border border-thematicColor p-4 rounded-2xl shadow-md flex flex-col gap-4"
+                className="w-full border border-thematicColor p-4 rounded-2xl shadow-md flex flex-col gap-4 text-textColor"
               >
                 {/* profile pic and email */}
                 <div className="flex justify-between items-center">

@@ -42,3 +42,31 @@ export const whiteTheme = {
   textColor: "#0a1128", //dark navy blue
   thematicColor: "#f9c784", //creamish
 };
+
+// Vitamin sea theme
+export const seaTheme = {
+  bgColor: "#ffffff", //white
+  textColor: "#0a1128", //dark navy blue
+  thematicColor: "#14b09b", //grrenish
+};
+
+// purple saga theme
+export const purpleTheme = {
+  bgColor: "#F5F5F5", //off white
+  textColor: "#0a1128", //dark navy blue
+  thematicColor: "#D09CFA", //purple
+};
+
+// dark red banga theme
+export const darkredTheme = {
+  bgColor: "#16213E", //dark blue
+  textColor: "#ffffff", //white
+  thematicColor: "#FB2576", //light pinkish red
+};
+
+// jamaica charm theme
+export const darkpurpleTheme = {
+  bgColor: "#42032C", //dark purple
+  textColor: "#ffffff", //white
+  thematicColor: "#D36B00", //dark yellowish
+};

@@ -7,6 +7,10 @@ import {
   redTheme,
   goldTheme,
   whiteTheme,
+  seaTheme,
+  purpleTheme,
+  darkredTheme,
+  darkpurpleTheme,
 } from "./src/config/themeConfig";
 
 export default {
@@ -88,6 +92,26 @@ export default {
         bgColor: `${whiteTheme.bgColor}`,
         textColor: `${whiteTheme.textColor}`,
         thematicColor: `${whiteTheme.thematicColor}`,
+      },
+      sea: {
+        bgColor: `${seaTheme.bgColor}`,
+        textColor: `${seaTheme.textColor}`,
+        thematicColor: `${seaTheme.thematicColor}`,
+      },
+      purple: {
+        bgColor: `${purpleTheme.bgColor}`,
+        textColor: `${purpleTheme.textColor}`,
+        thematicColor: `${purpleTheme.thematicColor}`,
+      },
+      darkred: {
+        bgColor: `${darkredTheme.bgColor}`,
+        textColor: `${darkredTheme.textColor}`,
+        thematicColor: `${darkredTheme.thematicColor}`,
+      },
+      darkpurple: {
+        bgColor: `${darkpurpleTheme.bgColor}`,
+        textColor: `${darkpurpleTheme.textColor}`,
+        thematicColor: `${darkpurpleTheme.thematicColor}`,
       },
     }),
   ],

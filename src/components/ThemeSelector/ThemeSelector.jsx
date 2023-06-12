@@ -38,7 +38,11 @@ export default function ThemeSelector() {
         <option value="ice">Icy Blues & Grays</option>
         <option value="red">Red Maharaja</option>
         <option value="gold">Golden Era</option>
+        <option value="darkred">Dark Red Banga</option>
         <option value="white">Formal Whites</option>
+        <option value="sea">Vitamin Sea</option>
+        <option value="purple">Purple Saga</option>
+        <option value="darkpurple">Jamaica Charm</option>
       </select>
     </section>
   );
