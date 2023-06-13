@@ -201,10 +201,10 @@ export default function Profile() {
   }
 
   return (
-    <main className="w-full h-screen flex flex-col animate-fade-in tracking-wider transition-all duration-500 ease-in-out mobile:h-max">
+    <main className="w-full h-screen flex flex-col animate-fade-in tracking-wider transition-all duration-500 ease-in-out mobile:h-max mobile:pb-16">
       <Navbar />
 
-      <section className="bg-bgColor h-full flex justify-center items-center p-4 text-base tall:items-start tall:pb-20">
+      <section className="bg-bgColor h-full flex justify-center items-center p-4 text-base tall:items-start tall:pb-16">
         <section className="border border-thematicColor flex w-[60%] flex-col gap-4 items-center rounded-xl shadow-lg p-4 md:w-[80%] sm:w-full xs:gap-2">
           <header className="text-4xl font-bold text-textColor mobile:text-3xl xs:text-xl">
             Your Profile Details
@@ -230,7 +230,7 @@ export default function Profile() {
 
               {/* user details */}
               <article className="p-4 flex-1 flex flex-col justify-center w-full text-textColor gap-4 mobile:p-2 mobile:items-center xs:gap-2">
-                <div className="text-5xl font-bold text-thematicColor mobile:text-4xl xs:text-2xl">
+                <div className="text-5xl font-bold text-thematicColor mobile:text-4xl xs:text-2xl mobile:text-center">
                   {auth.currentUser != null
                     ? auth.currentUser.displayName
                     : username}
