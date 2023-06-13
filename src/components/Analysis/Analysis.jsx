@@ -79,6 +79,8 @@ export default function Analysis() {
     // user data is fetched on each render of the page
     getData(uid, `${userEmailName}-result`).then((data) => {
       setLoading(false);
+
+      console.log("hi analysis");
       if (data[0].length == 0) {
         toast.info("No test data found", {
           position: "top-right",
@@ -139,7 +141,7 @@ export default function Analysis() {
         return tableCells;
       });
     });
-  }, [navigate, theme.thematicColor, uid, userEmailName]);
+  }, [uid, userEmailName]);
 
   return (
     <main className="bg-bgColor w-full min-h-screen animate-fade-in transition-all duration-500 ease-in-out">
