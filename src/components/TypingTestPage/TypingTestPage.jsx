@@ -46,12 +46,14 @@ export default function TypingTestPage() {
     window.addEventListener("resize", () => {
       if (window.outerWidth < 930) {
         setMobileMode(true);
+        setTestMode("none");
       } else {
         setMobileMode(false);
       }
     });
     if (window.outerWidth < 930) {
       setMobileMode(true);
+      setTestMode("none");
     } else {
       setMobileMode(false);
     }
