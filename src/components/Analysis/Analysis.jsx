@@ -28,13 +28,7 @@ import { useNavigate } from "react-router-dom";
 // importing toast
 import { toast } from "react-toastify";
 
-// importing custom hook which gives us the current hook value
-import useTheme from "../../hooks/Themehook";
-
 export default function Analysis() {
-  // theme value from custom hook
-  let theme = useTheme();
-
   // state for storing uid and collection segment to fetch user related data
   let [uid, setUid] = useState();
   let [userEmailName, setUserEmailName] = useState();
@@ -100,7 +94,7 @@ export default function Analysis() {
           {
             label: "Words/min",
             data: data[0].map((element) => element),
-            borderColor: theme.thematicColor,
+            borderColor: "#ffc100",
           },
           {
             label: "Characters/min",
