@@ -614,57 +614,63 @@ export default function WordModePage({ setTestMode }) {
         </article>
       </section>
 
+      {testState === "" ? (
+        <section className="w-[30%] flex border border-thematicColor rounded-lg divide-x divide-thematicColor text-base xs:text-sm mobile:w-full">
+          <button
+            onClick={() => {
+              setSelectedWordSlot(10);
+              setWords(randomWords(10));
+            }}
+            className={`cursor-pointer flex-1 p-1 ${
+              selectedWordSlot == 10 && "rounded-l-md bg-thematicColor"
+            }`}
+          >
+            10 words
+          </button>
+          <button
+            onClick={() => {
+              setSelectedWordSlot(20);
+              setWords(randomWords(20));
+            }}
+            className={`cursor-pointer flex-1 p-1 ${
+              selectedWordSlot == 20 && " bg-thematicColor"
+            }`}
+          >
+            20 words
+          </button>
+          <button
+            onClick={() => {
+              setSelectedWordSlot(50);
+              setWords(randomWords(50));
+            }}
+            className={`cursor-pointer flex-1 p-1 ${
+              selectedWordSlot == 50 && " bg-thematicColor"
+            }`}
+          >
+            50 words
+          </button>
+          <button
+            onClick={() => {
+              setSelectedWordSlot(100);
+              setWords(randomWords(100));
+            }}
+            className={`cursor-pointer flex-1 p-1 ${
+              selectedWordSlot == 100 && "rounded-r-md bg-thematicColor"
+            }`}
+          >
+            100 words
+          </button>
+        </section>
+      ) : (
+        <section
+          className={`w-max p-1 pl-3 pr-3 flex gap-1 border border-thematicColor rounded-lg text-base xs:text-sm mobile:w-full ${
+            testState !== "" && "bg-thematicColor text-textColor"
+          }`}
+        >
+          <b>{words.length - wordIndex}</b> <span>words remaining</span>
+        </section>
+      )}
       {/* Mode selection tabs */}
-      <section
-        className={`w-[30%] flex border border-thematicColor rounded-lg divide-x divide-thematicColor text-base transition-all duration-500 ease-in-out xs:text-sm mobile:w-full ${
-          testState !== "" && "invisible animate-fade-out"
-        }`}
-      >
-        <button
-          onClick={() => {
-            setSelectedWordSlot(10);
-            setWords(randomWords(10));
-          }}
-          className={`cursor-pointer flex-1 p-1 ${
-            selectedWordSlot == 10 && "rounded-l-md bg-thematicColor"
-          }`}
-        >
-          10 words
-        </button>
-        <button
-          onClick={() => {
-            setSelectedWordSlot(20);
-            setWords(randomWords(20));
-          }}
-          className={`cursor-pointer flex-1 p-1 ${
-            selectedWordSlot == 20 && " bg-thematicColor"
-          }`}
-        >
-          20 words
-        </button>
-        <button
-          onClick={() => {
-            setSelectedWordSlot(50);
-            setWords(randomWords(50));
-          }}
-          className={`cursor-pointer flex-1 p-1 ${
-            selectedWordSlot == 50 && " bg-thematicColor"
-          }`}
-        >
-          50 words
-        </button>
-        <button
-          onClick={() => {
-            setSelectedWordSlot(100);
-            setWords(randomWords(100));
-          }}
-          className={`cursor-pointer flex-1 p-1 ${
-            selectedWordSlot == 100 && "rounded-r-md bg-thematicColor"
-          }`}
-        >
-          100 words
-        </button>
-      </section>
 
       {/* Info block */}
       <div className="text-sm text-textColor tracking-widest mobile:text-center xs:text-[12px]">
