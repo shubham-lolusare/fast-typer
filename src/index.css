@@ -14,4 +14,5 @@ select:-webkit-autofill:hover,
 select:-webkit-autofill:focus {
   -webkit-text-fill-color: #ff4500;
   transition: background-color 5000s ease-in-out 0s;
+  background: transparent;
 }

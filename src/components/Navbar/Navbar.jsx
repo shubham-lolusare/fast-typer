@@ -68,7 +68,11 @@ export default function Navbar() {
     } else {
       setNavShow(false);
     }
-  }, [userName, profileUrl]);
+  }, [
+    auth.currentUser != null ? auth.currentUser.photoURL : profileUrl,
+    userName,
+    profileUrl,
+  ]);
 
   return (
     <nav className="border-t-4 border-thematicColor w-full p-4 text-textColor flex justify-between items-center bg-bgColor shadow-lg sticky top-0 z-50 md:items-start md:gap-4">
