@@ -20,9 +20,6 @@ export default function ForgetPasswordModal({ show, setShowModal }) {
   // state for user email input
   let [email, setEmail] = useState("");
 
-  // state for displaying any error
-  let [status, setStatus] = useState("");
-
   //state for setting the display of spinning gears in modal.
   let [loading, setLoading] = useState(false);
 
@@ -35,7 +32,6 @@ export default function ForgetPasswordModal({ show, setShowModal }) {
     sendPasswordResetEmail(auth, email)
       .then(() => {
         setLoading(false);
-        setStatus("");
         toast.success("Link Sent!!!", {
           position: "top-right",
           autoClose: 2000,
@@ -52,9 +48,17 @@ export default function ForgetPasswordModal({ show, setShowModal }) {
       })
       // catch block for email reset function
       .catch((error) => {
-        setStatus("");
         setLoading(false);
-        setStatus(error.message);
+        toast.error(error.message, {
+          position: "top-right",
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+        });
       });
   }
 
@@ -91,11 +95,6 @@ export default function ForgetPasswordModal({ show, setShowModal }) {
             >
               Email Address
             </label>
-          </div>
-
-          {/* Error will be shown here if any. Its display is managed by the status state */}
-          <div className=" text-textColor font-bold">
-            {status !== "" ? status : ""}
           </div>
         </article>
 
